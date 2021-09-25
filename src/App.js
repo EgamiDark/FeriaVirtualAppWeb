@@ -1,10 +1,13 @@
-import './App.css';
-import Login from './templates/SingIn'
-import DashBoard from './templates/dashboard/Dashboard'
+import AuthProvider from './auth/AuthProvider';
+import AppRouter from './routers/AppRouter'
 
 function App() {
   return (
-    <Login/>
+    <div style={{backgroundColor:"#272537"}}>
+      <AuthProvider>
+        <AppRouter/>
+      </AuthProvider>
+    </div>
   );
 }
 
