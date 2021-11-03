@@ -1,14 +1,16 @@
 import React from "react";
-import ContHome from "../components/ContHome";
-import ContMisContratos from "../components/ContMisContratos";
-import ContMisPagos from "../components/ContMisPagos";
-import ContMisPedidos from "../components/ContMisPedidos";
-import ContMisProductos from "../components/ContMisProductos";
-import ContMisSubastas from "../components/ContMisSubastas";
-import ContMisVehiculos from "../components/ContMisVehiculos";
-import ContPedidos from "../components/ContPedidos";
-import ContPerfil from "../components/ContPerfil";
-import ContSubastas from "../components/ContSubastas";
+import ContHome from "../components/contenido/ContHome";
+import ContMisContratos from "../components/contenido/ContMisContratos";
+import ContMisPagos from "../components/contenido/ContMisPagos";
+import ContMisPedidos from "../components/contenido/ContMisPedidos";
+import ContMisProductos from "../components/contenido/ContMisProductos";
+import ContMisSubastas from "../components/contenido/ContMisSubastas";
+import ContMisVehiculos from "../components/contenido/ContMisVehiculos";
+import AñadirV from "../components/crudVehiculo/Añadir"
+import ContPedidos from "../components/contenido/ContPedidos";
+import AñadirP from "../components/crudPedido/Añadir"
+import ContPerfil from "../components/contenido/ContPerfil";
+import ContSubastas from "../components/contenido/ContSubastas";
 import DashBoard from "../components/dashboard/Dashboard";
 
 export const Home = () => {
@@ -39,9 +41,17 @@ export const MisVehiculos = () => {
   return <DashBoard contenido={<ContMisVehiculos/>}/>
 };
 
+export const AñadirVehiculo = () =>{
+  return <DashBoard contenido={<AñadirV/>}/>
+}
+
 export const Pedidos = () => {
   return <DashBoard contenido={<ContPedidos/>}/>
 };
+
+export const AñadirPedido = () =>{
+  return <DashBoard contenido={<AñadirP/>}/>
+}
 
 export const Perfil = () => {
   return <DashBoard contenido={<ContPerfil/>}/>

@@ -1,4 +1,4 @@
-import enContru from "../img/enContru.jpg";
+import enContru from "../../img/enContru.jpg";
 const ContHome = () => {
   return (
     <div style={{ textAlign: "center" }}>

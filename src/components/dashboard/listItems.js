@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {Dashboard,ShoppingCart,AccountCircle,Logout, AddShoppingCart,AttachMoney,Book,LocalShipping,Sell} from '@mui/icons-material'
 import ListItemButton from '@mui/material/ListItemButton/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon'
@@ -8,7 +8,12 @@ import { useHistory } from "react-router-dom";
 
 const MainListItems = ()=>{
   let auth = useAuth();
-  let rol = auth.user[9];
+  const [rol,setRol]=useState(0);
+  useEffect(()=>{
+    if(auth.user){
+      setRol(auth.user[9]);
+    }
+  },[])
   const history = useHistory();
   return(
   <div>
@@ -19,56 +24,56 @@ const MainListItems = ()=>{
       </ListItemIcon>
       <ListItemText primary="Home" />
     </ListItemButton>
-    { rol===2 ?
+    { rol!==2 ?
     <ListItemButton onClick={()=>history.push("/subastas")}>
       <ListItemIcon>
         <AddShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Subastas" />
     </ListItemButton>:<></>}
-    { rol===2 ?
+    { rol!==2 ?
     <ListItemButton onClick={()=>history.push("/misSubastas")}>
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
       <ListItemText primary="Mis Subastas" />
     </ListItemButton>:<></>}
-    { rol===2 ?
+    { rol!==2 ?
     <ListItemButton onClick={()=>history.push("/misVehiculos")}>
       <ListItemIcon>
         <LocalShipping />
       </ListItemIcon>
       <ListItemText primary="Mis Vehiculos" />
     </ListItemButton>:<></>}
-    { rol===3 ?
+    { rol!==3 ?
     <ListItemButton onClick={()=>history.push("/pedidos")}>
       <ListItemIcon>
       <AddShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Pedidos" />
     </ListItemButton>:<></>}
-    { rol===3 ?
+    { rol!==3 ?
     <ListItemButton onClick={()=>history.push("/misProductos")}>
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
       <ListItemText primary="Mis Productos" />
     </ListItemButton>:<></>}
-    { rol===3 ?
+    { rol!==3 ?
     <ListItemButton onClick={()=>history.push("/misContratos")}>
       <ListItemIcon>
         <Book />
       </ListItemIcon>
       <ListItemText primary="Mis Contratos" />
     </ListItemButton>:<></>}
-    { rol===4 ?
+    { rol!==4 ?
     <ListItemButton onClick={()=>history.push("/misPedidos")}>
       <ListItemIcon>
         <ShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Mis Pedidos" />
     </ListItemButton>:<></>}
-    { rol===4 ?
+    { rol!==4 ?
     <ListItemButton onClick={()=>history.push("/misPagos")}>
       <ListItemIcon>
         <AttachMoney />
