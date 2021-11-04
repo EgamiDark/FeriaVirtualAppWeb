@@ -3,7 +3,7 @@ import useAuth from '../auth/useAuth';
 
 const PrivateRoute = ({component:Component, ...rest})=>{
     const auth = useAuth();
-    return <Route {...rest}>{auth.user==null? <Component/>:<Redirect to="/"/>}</Route>
+    return <Route {...rest}>{auth.user !== null ? <Component/>:<Redirect to="/"/>}</Route>
 }
 
 export default PrivateRoute;
