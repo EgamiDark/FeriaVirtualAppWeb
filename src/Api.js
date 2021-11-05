@@ -13,3 +13,17 @@ export const SingIn = async (bd) => {
     .catch(err => err);
   return res;
 };
+
+export const getRol = async (bd) => {
+  let res = await fetch(API + '/api/auth/rol', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: bd,
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return res;
+};

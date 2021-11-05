@@ -7,34 +7,67 @@ import AddIcon from '@mui/icons-material/Add';
 import { useHistory } from "react-router-dom";
 import useAuth from '../../auth/useAuth';
 
-import { GetTransportesUsuario } from "../../Api/transporte";
+import { getTransportesUsuario } from "../../Api/transporte";
+import { getTipoRefrig, getTipoTrans } from "../../Api/datosFk";
 
 const ContMisVehiculos = () => {
   const history = useHistory();
-  const [nomRows, setNomRows] = useState();
-  const [rows, setRows] = useState();
-
+  const [nomRows, setNomRows] = useState([]);
+  const [rows, setRows] = useState([]);
   let auth = useAuth();
-  const [idUsuario, setIdUsuario] = useState(0);
-  const [misVehiculos, setMisVehiculos] = useState();
-  const [reset, setReset] = useState(0);
+  let idUsuario = auth?.user[0];
+  const [misVehiculos, setMisVehiculos] = useState([]);
+  const [tipoRefrig, setTipoRefrig] = useState([]);
+  const [tipoTrans, setTipoTrans] = useState([]);
+  const [reset,setReset] = useState([]);
+
+  const iteRows = async () => {
+
+    let r = []
+
+    for (let i = 0; i < misVehiculos.rows?.length; i++) {
+      let f = []
+      f.push(misVehiculos?.rows[i][0])
+      f.push(misVehiculos?.rows[i][1])
+      f.push(misVehiculos?.rows[i][2])
+      if (misVehiculos?.rows[i][3] == 0) {
+        f.push("Desactivado")
+      }
+      if (misVehiculos?.rows[i][3] == 1) {
+        f.push("Activado")
+      }
+      for (let tr = 0; tr < tipoRefrig.rows?.length; tr++) {
+        if (misVehiculos?.rows[i][4] == tipoRefrig.rows[tr][0]) {
+          f.push(tipoRefrig.rows[tr][1])
+          break;
+        }
+      }
+      
+      for (let tt = 0; tt < tipoTrans.rows?.length; tt++) {
+        if (misVehiculos?.rows[i][5] == tipoTrans.rows[tt][0]) {
+          f.push(tipoTrans.rows[tt][1])
+          break;
+        }
+      }
+      r.push(f)
+    }
+    setRows(r)
+    
+  }
 
   useEffect(async () => {
-    if(auth.user){
-      setIdUsuario(auth.user[0]);
-    }
+    setMisVehiculos(await getTransportesUsuario(idUsuario));
+    setTipoRefrig(await getTipoRefrig());
+    setTipoTrans(await getTipoTrans());
+    setReset(1)
+  }, [])
 
-    setMisVehiculos(await GetTransportesUsuario(21));
-    console.log(JSON.stringify(misVehiculos?.rows))
+  useEffect(()=>{
+    setNomRows(["Patente", "Tamaño", "Capacidad Carga", "Activo", "Refrigeracion", "Tipo", "Acción"])
+    iteRows();
+    console.log(rows)
+  },[reset])
 
-    
-    setReset(1);
-  }, [reset])
-
-  useEffect(() => {
-    setNomRows(["Patente", "Tamaño", "Capacidad Carga", "Refrigeración", "Cualquiera", "Activo", "Acción"]) 
-    setRows(JSON.stringify(misVehiculos?.rows))
-  },[])
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Mis Vehiculos</h1>

@@ -14,17 +14,12 @@ export const CrearTransporte = async (bd) => {
   return res;
 };
 
-export const GetTransportesUsuario = async (idUsuario) => {
-    console.log(idUsuario)
-  let res = await fetch(API + "/api/transporte/obtener/todos/usuario/" + idUsuario, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+export const getTransportesUsuario = async (idUsuario) => {
+  let res = await fetch(API +"/api/transporte/obtener/todos/usuario/" + idUsuario, {
+    method: 'GET'
   })
-    .then((r) => r.json())
-    .then((data) => data)
-    .catch((err) => err);
-    
-  return res;
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
 };

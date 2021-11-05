@@ -32,11 +32,11 @@ const MainListItems = ()=>{
       <ListItemText primary="Subastas" />
     </ListItemButton>:<></>}
     { rol!==2 ?
-    <ListItemButton onClick={()=>history.push("/misSubastas")}>
+    <ListItemButton onClick={()=>history.push("/misOfertas")}>
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
-      <ListItemText primary="Mis Subastas" />
+      <ListItemText primary="Mis Ofertas" />
     </ListItemButton>:<></>}
     { rol!==2 ?
     <ListItemButton onClick={()=>history.push("/misVehiculos")}>

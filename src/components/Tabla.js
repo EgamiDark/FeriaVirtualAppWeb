@@ -28,11 +28,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const CustomizedTables = (props) => {
-  let nomRows = props.nomRows;
-  let rows = props.rows;
-  const [fil, setFil] = useState();
+  let nomRows = props.nomRows
+  let rows =  props.rows
+  const [fil, setFil] = useState([]);
   const [nomFil, setNomFil] = useState();
-  const [reset, setReset] = useState(0)
+
   const nomFilas = () => {
     let f = []
     for (let i = 0; i < nomRows?.length; i++) {
@@ -42,6 +42,7 @@ const CustomizedTables = (props) => {
   }
 
   const filas = () => {
+    
     let f = []
     for (let i = 0; i < rows?.length; i++) {
       let c = []
@@ -56,10 +57,9 @@ const CustomizedTables = (props) => {
   }
 
   useEffect(() => {
-    nomFilas()
+    nomFilas();
     filas();
-    setReset(1);
-  }, [reset])
+  }, [rows])
 
   return (
     <TableContainer sx={{height:700, display:"block",overflow:"scroll"}} component={Paper}>
