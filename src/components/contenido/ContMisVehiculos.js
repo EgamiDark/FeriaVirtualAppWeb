@@ -71,7 +71,7 @@ const ContMisVehiculos = () => {
     <div style={{ textAlign: "center" }}>
       <h1>Mis Vehiculos</h1>
       <div style={{ textAlign: "right", padding: 5 }}>
-        <IconButton sx={{ color: "white", backgroundColor: "green" }} aria-label="add" onClick={() => history.push("/añadirVehiculo")}>
+        <IconButton sx={{ color: "white", backgroundColor: "green" }} aria-label="add" onClick={() => history.push({pathname:"/añadirVehiculo"})}>
           <AddIcon />
         </IconButton>
       </div>

@@ -11,9 +11,8 @@ import ContPedidos from "../components/contenido/ContPedidos";
 import AñadirP from "../components/crudPedido/Añadir"
 import ContPerfil from "../components/contenido/ContPerfil";
 import ContSubastas from "../components/contenido/ContSubastas";
+import OferSubasta from "../components/crudSubasta/ofertar"
 import DashBoard from "../components/dashboard/Dashboard";
-
-
 
 export const Home = () => {
   return <DashBoard contenido={<ContHome/>}/>
@@ -62,3 +61,7 @@ export const Perfil = () => {
 export const Subastas = () => {
   return <DashBoard contenido={<ContSubastas/>}/>
 };
+
+export const OfertarSubasta = () =>{
+  return <DashBoard contenido={<OferSubasta/>}/>
+}
