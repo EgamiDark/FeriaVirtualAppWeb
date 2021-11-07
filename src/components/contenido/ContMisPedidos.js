@@ -4,12 +4,48 @@ import AddIcon from '@mui/icons-material/Add';
 import {useState,useEffect} from 'react'
 import { useHistory } from "react-router-dom";
 
+import { getPedidosUsuario } from "../../Api/pedido";
+import useAuth from '../../auth/useAuth';
+
 const ContMisPedidos = () => {
+  let auth = useAuth();
+  let idUsuario = auth?.user[0];
+
   const history = useHistory();
   const [nomRows, setNomRows] = useState();
+  const [rows, setRows] = useState([]);
+  const [misPedidos, setMisPedidos] = useState([]);
+  const [reset, setReset] = useState([]);
+
+  const iteRows = async () => {
+
+    let r = []
+
+    for (let i = 0; i < misPedidos.rows?.length; i++) {
+      let f = []
+      f.push(misPedidos?.rows[i][0])
+      f.push(misPedidos?.rows[i][1])
+      f.push(misPedidos?.rows[i][2])
+      f.push(misPedidos?.rows[i][3])
+      f.push(misPedidos?.rows[i][4])
+      f.push(misPedidos?.rows[i][5])
+      f.push(misPedidos?.rows[i][6])
+      f.push(misPedidos?.rows[i][7])
+      r.push(f)
+    }
+
+    setRows(r)    
+  }
+
+  useEffect(async () => {
+    setMisPedidos(await getPedidosUsuario(idUsuario));
+    setReset(1)
+  }, [])
+
   useEffect(() => {
     setNomRows(["Id Pedido","Producto","Fecha Solicitud", "Fecha Termino","Cantidad Solicitada","Kg X unidad","Precio Max Unidad","Estado", "Acción"])
-  },[])
+    iteRows();
+  },[reset])
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Mis Pedidos</h1>
@@ -18,7 +54,7 @@ const ContMisPedidos = () => {
         <AddIcon />
       </IconButton>
       </div>
-      <Tabla nomRows={nomRows}/>
+      <Tabla nomRows={nomRows} rows={rows}/>
     </div>
   );
 };

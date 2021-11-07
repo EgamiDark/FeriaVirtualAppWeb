@@ -19,10 +19,9 @@ const ContMisVehiculos = () => {
   const [misVehiculos, setMisVehiculos] = useState([]);
   const [tipoRefrig, setTipoRefrig] = useState([]);
   const [tipoTrans, setTipoTrans] = useState([]);
-  const [reset,setReset] = useState([]);
+  const [reset, setReset] = useState([]);
 
   const iteRows = async () => {
-
     let r = []
 
     for (let i = 0; i < misVehiculos.rows?.length; i++) {
@@ -49,10 +48,11 @@ const ContMisVehiculos = () => {
           break;
         }
       }
-      r.push(f)
+
+      r.push(f);
     }
-    setRows(r)
-    
+
+    setRows(r);    
   }
 
   useEffect(async () => {
@@ -65,7 +65,6 @@ const ContMisVehiculos = () => {
   useEffect(()=>{
     setNomRows(["Patente", "Tamaño", "Capacidad Carga", "Activo", "Refrigeracion", "Tipo", "Acción"])
     iteRows();
-    console.log(rows)
   },[reset])
 
   return (
