@@ -9,3 +9,19 @@ export const getSubastasD = async () => {
     .catch(err => err);
   return await res;
 };
+
+
+export const postOfertar = async (bd) => {
+  console.log(bd)
+  let res = await fetch(API + "/api/subasta/insertarOferta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};

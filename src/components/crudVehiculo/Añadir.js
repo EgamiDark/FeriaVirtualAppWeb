@@ -27,13 +27,6 @@ const Añadir = () => {
   let auth = useAuth();
   const [idUsuario, setIdUsuario] = useState(0);
 
-  useEffect(()=>{
-    if(auth.user){
-      console.log(auth.user[0])
-      setIdUsuario(auth.user[0]);
-    }
-  },[])
-
   const MySwal = withReactContent(Swal);
   const history = useHistory();
   const {
@@ -42,6 +35,12 @@ const Añadir = () => {
     formState: { errors },
   } = useForm();
 
+  useEffect(()=>{
+    if(auth.user){
+      console.log(auth.user[0])
+      setIdUsuario(auth.user[0]);
+    }
+  },[])
   const guardarTransporte = async (data) => {
     try {
       data.idUsuario = idUsuario;

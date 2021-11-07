@@ -30,3 +30,23 @@ export const getTipoTrans = async () => {
       .catch(err => err);
     return await res;
   };
+
+  export const getEstSubasta = async () => {
+    let res = await fetch(API +"/api/datosFk/estSubasta", {
+      method: 'GET'
+    })
+      .then(r => r.json())
+      .then(data => data)
+      .catch(err => err);
+    return await res;
+  };
+
+  export const getProductos = async () => {
+    let res = await fetch(API +"/api/producto/obtener/todos", {
+      method: 'GET'
+    })
+      .then(r => r.json())
+      .then(data => data)
+      .catch(err => err);
+    return await res;
+  };
