@@ -10,8 +10,8 @@ export const getPedidosD = async () => {
   return await res;
 };
 
-export const getPedidosUsuario = async (idUsuario) => {
-  let res = await fetch(API +"/api/pedido/obtener/todos/usuario/" + idUsuario, {
+export const getPedidos = async () => {
+  let res = await fetch(API +"/api/pedido/obtener/todos", {
     method: 'GET'
   })
     .then(r => r.json())

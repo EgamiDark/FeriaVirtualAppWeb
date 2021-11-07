@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {useState,useEffect} from 'react'
 import { useHistory } from "react-router-dom";
 
-import { getPedidosUsuario } from "../../Api/pedido";
+import { getPedidos } from "../../Api/pedido";
 import useAuth from '../../auth/useAuth';
 
 const ContMisPedidos = () => {
@@ -38,7 +38,7 @@ const ContMisPedidos = () => {
   }
 
   useEffect(async () => {
-    setMisPedidos(await getPedidosUsuario(idUsuario));
+    setMisPedidos(await getPedidos(idUsuario));
     setReset(1)
   }, [])
 
