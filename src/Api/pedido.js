@@ -29,3 +29,14 @@ export const getPedidosUsuario = async (idUsuario) => {
     .catch(err => err);
   return await res;
 };
+
+export const getOfertasProd = async (idUsuario) => {
+  let res = await fetch(API +"/api/pedido/ofertas/" + idUsuario, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+

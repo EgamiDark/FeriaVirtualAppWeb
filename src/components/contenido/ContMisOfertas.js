@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { getOfertas, postCancelarOferta } from "../../Api/subasta";
 import useAuth from '../../auth/useAuth';
-import { getEstOferta } from "../../Api/datosFk";
+import { getEstOfertaSub } from "../../Api/datosFk";
 import { useHistory } from "react-router-dom";
 import moment from "moment";
 
@@ -22,6 +22,7 @@ const ContMisOfertas = () => {
   const [estOferta,setEstOferta] = useState([])
   const [rows,setRows] = useState([])
   const [reset,setReset] = useState(0);
+  const [reload,setReload] = useState(0);
 
   const cancelarOferta = async (id)=>{
     await MySwal.fire({
@@ -42,7 +43,8 @@ const ContMisOfertas = () => {
               'Esta oferta ha sido cancelada.',
               'success'
             )
-            history.go(1);
+            setReset(0)
+            setReload(1)
           } else {
             await MySwal.fire({
               title: <strong>Que Mal!</strong>,
@@ -83,8 +85,8 @@ const ContMisOfertas = () => {
       //f.push(oferta?.rows[i][6])id oferta
       f.push(
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton sx={{ color: "blue" }} aria-label="update" onClick={() => history.push({pathname:"/ofertarSubasta",state:{idOferta:oferta?.rows[i][6]}})}>
-            <EditIcon />
+          <IconButton sx={{ color: "blue" }} aria-label="update" onClick={() => history.push({pathname:"/modificarOfertaS",state:{idOferta:oferta?.rows[i][6]}})}>
+            <EditIcon />  
           </IconButton>
           <IconButton sx={{ color: "red" }} aria-label="delete" onClick={()=>{cancelarOferta(oferta?.rows[i][6])}}>
             <CancelIcon />
@@ -98,15 +100,15 @@ const ContMisOfertas = () => {
 
   useEffect(async ()=>{
     setOferta(await getOfertas(idUsuario))
-    setEstOferta(await getEstOferta())
+    setEstOferta(await getEstOfertaSub())
     setReset(1);
-  },[])
+  },[reload])
   useEffect(()=>{
     iteRows();
   },[reset])
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Mis Ofertas</h1>
+      <h1>Mis Ofertas(Transporte)</h1>
       <Tabla nomRows={nomRows} rows={rows}/>
     </div>
   );

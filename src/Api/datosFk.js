@@ -40,8 +40,17 @@ export const getEstSubasta = async () => {
   return await res;
 };
 
-export const getEstOferta = async () => {
-  let res = await fetch(API + "/api/datosFk/estOferta", {
+export const getEstOfertaSub = async () => {
+  let res = await fetch(API + "/api/datosFk/estOfertaSub", {
+    method: "GET",
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return await res;
+};
+export const getEstOfertaProd = async () => {
+  let res = await fetch(API + "/api/datosFk/estOfertaProd", {
     method: "GET",
   })
     .then((r) => r.json())

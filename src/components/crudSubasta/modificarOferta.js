@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import useAuth from '../../auth/useAuth';
 
-import { postOfertar } from "../../Api/subasta";
+import { getOferta, postModificarOferta } from "../../Api/subasta";
 import { getTransportesUsuario } from "../../Api/transporte";
 
 
@@ -37,14 +37,29 @@ const Ofertar = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let hoy = new Date()
-  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD")
-  const [fecha, setFecha] = useState()
   const [vehiculo, setVehiculo] = useState([])
   const [selectV, setSelectV] = useState([])
+  const [oferta, setOferta] = useState([])
+  const [idSubasta, setIdSubasta] = useState(0)
+  const [fecha, setFecha] = useState("")
+  const [precio, setPrecio] = useState(0)
+  const [cantidad, setCantidad] = useState(0)
+  const [patente, setPatente] = useState("")
+  const [idOferta, setIdOferta] = useState(0)
   const [reset, setReset] = useState(0)
 
   const classes = useStyles();
+
+  const iteRows = () => {
+    for (let i = 0; i < oferta.rows?.length; i++) {
+      setIdSubasta(oferta?.rows[i][0])
+      setFecha(moment(oferta?.rows[i][1]).format("YYYY-MM-DD"))
+      setPrecio(oferta?.rows[i][2])
+      setCantidad(oferta?.rows[i][3])
+      setPatente(oferta?.rows[i][4])
+      setIdOferta(oferta?.rows[i][6])
+    }
+  }
 
   const cargarVehiculo = () => {
     let f = []
@@ -56,28 +71,31 @@ const Ofertar = () => {
 
   useEffect(async () => {
     setVehiculo(await getTransportesUsuario(idUsuario))
-    setFecha(moment(fechaHoy).format("DD-MM-YYYY"))
+    setOferta(await getOferta(history.location.state?.idOferta))
     setReset(1)
   }, [])
 
   useEffect(() => {
     cargarVehiculo()
+    iteRows()
   }, [reset])
 
-  const guardarOferta = async (data) => {
-
+  const modificarOferta = async (data) => {
     try {
-      data.idSubasta = history.location.state?.idSubasta;
-      data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data))
-      const res = await postOfertar(JSON.stringify(data));
+      data.idSubasta = idSubasta;
+      data.fechaEntrega = moment(fecha).format("DD-MM-YYYY");
+      data.precioOferta = precio;
+      data.cantidadTransporte = cantidad;
+      data.patente = patente;
+      data.idOferta = idOferta;
+      const res = await postModificarOferta(JSON.stringify(data));
 
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
           html: (
             <i>
-              Guardado Correctamente!
+              Modificado Correctamente!
             </i>
           ),
           icon: "success",
@@ -105,14 +123,14 @@ const Ofertar = () => {
 
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
-      <h1>Añadir Oferta</h1>
-      <form onSubmit={handleSubmit(guardarOferta)}>
+      <h1>Modificar Oferta</h1>
+      <form onSubmit={handleSubmit(modificarOferta)}>
         <TextField
           name="idSubasta"
           className={classes.inputs}
           label="Id Subasta "
           variant="outlined"
-          value={history.location.state?.idSubasta}
+          value={idSubasta}
           disabled
         ></TextField>
         <TextField
@@ -127,6 +145,10 @@ const Ofertar = () => {
           label="Precio Oferta*"
           variant="outlined"
           type="number"
+          value={precio}
+          onChange={item=>{
+            setPrecio(item.target.value)
+          }}
         ></TextField>
         <TextField
           name="cantidadTransporte"
@@ -141,27 +163,32 @@ const Ofertar = () => {
           label="Cantidad a Transportar*"
           variant="outlined"
           type="number"
+          value={cantidad}
+          onChange={item=>{
+            setCantidad(item.target.value)
+          }}
         ></TextField>
         <TextField
           name="fechaEntrega"
           className={classes.inputs}
           label="Fecha Entrega(Aprox.)"
-          defaultValue={fechaHoy}
+          value={fecha}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("DD-MM-YYYY"))
+            setFecha(moment(item.target.value).format("YYYY-MM-DD"))
           }}
           variant="outlined"
           type="date"
         ></TextField>
         <TextField
           name="patente"
-          {...register("patente", { required: "Este campo es requerido" })}
-          error={!!errors.patente}
-          helperText={errors.patente ? errors.patente.message : ""}
           className={classes.selects}
           select
           label="Vehiculo*"
           variant="outlined"
+          value={patente}
+          onChange={item=>{
+            setPatente(item.target.value)
+          }}
         >
           {selectV}
         </TextField>
@@ -171,7 +198,7 @@ const Ofertar = () => {
           variant="contained"
           color="primary"
         >
-          Guardar
+          Modificar
         </Button>
       </form>
     </div>
