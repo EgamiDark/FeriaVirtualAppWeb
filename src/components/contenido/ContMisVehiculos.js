@@ -12,7 +12,7 @@ import { getTipoRefrig, getTipoTrans } from "../../Api/datosFk";
 
 const ContMisVehiculos = () => {
   const history = useHistory();
-  const [nomRows, setNomRows] = useState([]);
+  let nomRows = ["Patente", "Tamaño", "Capacidad Carga", "Activo", "Refrigeracion", "Tipo", "Acción"];
   const [rows, setRows] = useState([]);
   let auth = useAuth();
   let idUsuario = auth?.user[0];
@@ -63,7 +63,6 @@ const ContMisVehiculos = () => {
   }, [])
 
   useEffect(()=>{
-    setNomRows(["Patente", "Tamaño", "Capacidad Carga", "Activo", "Refrigeracion", "Tipo", "Acción"])
     iteRows();
   },[reset])
 

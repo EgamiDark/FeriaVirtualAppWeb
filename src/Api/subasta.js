@@ -10,15 +10,36 @@ export const getSubastasD = async () => {
   return await res;
 };
 
+export const getOfertas = async (id) => {
+  let res = await fetch(API +"/api/subasta/ofertas/"+id, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
 
 export const postOfertar = async (bd) => {
-  console.log(bd)
   let res = await fetch(API + "/api/subasta/insertarOferta", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+
+export const postCancelarOferta = async (id) => {
+  let res = await fetch(API + "/api/subasta/cancelarOferta/"+id, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
   })
     .then((r) => r.json())
     .then((data) => data)

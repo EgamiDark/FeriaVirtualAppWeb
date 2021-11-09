@@ -19,7 +19,16 @@ const ContMisPedidos = () => {
   const history = useHistory();
   const [productos, setProductos] = useState([]);
   const [estadosPedido, setEstadosPedido] = useState([]);
-  const [nomRows, setNomRows] = useState();
+  let nomRows = [
+    "Producto",
+    "Fecha Solicitud",
+    "Fecha Termino",
+    "Cantidad Solicitada",
+    "Kg X unidad",
+    "Precio Max Unidad",
+    "Estado",
+    "Acción",
+  ];
   const [rows, setRows] = useState([]);
   const [misPedidos, setMisPedidos] = useState([]);
   const [reset, setReset] = useState([]);
@@ -37,10 +46,10 @@ const ContMisPedidos = () => {
         }
       }
 
-      let fechaSolicitud = moment(misPedidos?.rows[i][1]).format("DD/MM/YYYY hh:mm:ss");
+      let fechaSolicitud = moment(misPedidos?.rows[i][1]).format("DD/MM/YYYY");
       f.push(fechaSolicitud);
 
-      let fechaTermino = moment(misPedidos?.rows[i][2]).format("DD/MM/YYYY hh:mm:ss");
+      let fechaTermino = moment(misPedidos?.rows[i][2]).format("DD/MM/YYYY");
       f.push(fechaTermino);
       f.push(misPedidos?.rows[i][3]);
       f.push(misPedidos?.rows[i][4]);
@@ -54,7 +63,7 @@ const ContMisPedidos = () => {
       }
 
       f.push(
-        <div style={{ display: "flex", justifyContent: "space-between"}}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton sx={{ color: "green" }} aria-label="add">
             <EditIcon />
           </IconButton>
@@ -78,16 +87,6 @@ const ContMisPedidos = () => {
   }, []);
 
   useEffect(() => {
-    setNomRows([
-      "Producto",
-      "Fecha Solicitud",
-      "Fecha Termino",
-      "Cantidad Solicitada",
-      "Kg X unidad",
-      "Precio Max Unidad",
-      "Estado",
-      "Acción",
-    ]);
     iteRows();
   }, [reset]);
   return (

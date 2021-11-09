@@ -10,7 +10,17 @@ import moment from "moment";
 
 const ContPedidos = () => {
   const history = useHistory();
-  const [nomRows, setNomRows] = useState([]);
+  let nomRows = [
+    "Id Pedido",
+    "Producto",
+    "Fecha Solicitud",
+    "Fecha Termino",
+    "Cantidad Solicitada",
+    "Kg X unidad",
+    "Precio Max Unidad",
+    "Estado",
+    "Acción",
+  ];
   const [rows, setRows] = useState([]);
   const [pedido, setPedido] = useState([]);
   const [reset, setReset] = useState(0);
@@ -24,10 +34,10 @@ const ContPedidos = () => {
       f.push(pedido?.rows[i][0]); //ID
       f.push("PALTA");
 
-      let fechaSolicitud = moment(pedido?.rows[i][1]).format("DD/MM/YYYY hh:mm:ss");
+      let fechaSolicitud = moment(pedido?.rows[i][1]).format("DD/MM/YYYY");
       f.push(fechaSolicitud); //FECHA SOL.
 
-      let fechaTermino = moment(pedido?.rows[i][2]).format("DD/MM/YYYY hh:mm:ss");
+      let fechaTermino = moment(pedido?.rows[i][2]).format("DD/MM/YYYY");
       f.push(fechaTermino); //FECHA TERM.
 
       f.push(pedido?.rows[i][3]); //CANTIDAD
@@ -52,17 +62,6 @@ const ContPedidos = () => {
   }, []);
 
   useEffect(() => {
-    setNomRows([
-      "Id Pedido",
-      "Producto",
-      "Fecha Solicitud",
-      "Fecha Termino",
-      "Cantidad Solicitada",
-      "Kg X unidad",
-      "Precio Max Unidad",
-      "Estado",
-      "Acción",
-    ]);
     iteRows();
   }, [reset]);
   return (

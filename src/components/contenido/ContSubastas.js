@@ -7,10 +7,12 @@ import { getUsuarios } from "../../Api/auth";
 import IconButton from '@mui/material/IconButton';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useHistory } from "react-router-dom";
+import moment from "moment";
+
 
 const ContSubastas = () => {
   const history = useHistory();
-  const [nomRows, setNomRows] = useState([]);
+  let nomRows = ["Id Subasta","Fecha Subasta", "Fecha Termino","Producto","Peso Total","Cantidad","Refrigerante","Tipo Transporte","Dirección","Estado", "Acción"];
   const [rows,setRows] = useState([]);
 
   const [subasta, setSubasta] = useState([]);
@@ -29,8 +31,8 @@ const ContSubastas = () => {
     for (let i = 0; i < subasta.rows?.length; i++) {
       let f = []
       f.push(subasta?.rows[i][0])
-      f.push(subasta?.rows[i][1])
-      f.push(subasta?.rows[i][2])
+      f.push(moment(subasta?.rows[i][1]).format("DD/MM/YYYY"))
+      f.push(moment(subasta?.rows[i][2]).format("DD/MM/YYYY"))
       for (let p = 0; p < pedido.rows?.length; p++) {
         if(pedido?.rows[p][0]==subasta?.rows[i][3]){
           for (let pr = 0; pr < producto.rows?.length; pr++) {
@@ -90,7 +92,6 @@ const ContSubastas = () => {
   },[])
 
   useEffect(()=>{
-    setNomRows(["Id Subasta","Fecha Subasta", "Fecha Termino","Producto","Peso Total","Cantidad","Refrigerante","Tipo Transporte","Dirección","Estado", "Acción"])
     iteRows();
   },[reset])
   return (

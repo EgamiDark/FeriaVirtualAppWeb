@@ -41,6 +41,16 @@ export const getTipoTrans = async () => {
     return await res;
   };
 
+  export const getEstOferta = async () => {
+    let res = await fetch(API +"/api/datosFk/estOferta", {
+      method: 'GET'
+    })
+      .then(r => r.json())
+      .then(data => data)
+      .catch(err => err);
+    return await res;
+  };
+
   export const getProductos = async () => {
     let res = await fetch(API +"/api/producto/obtener/todos", {
       method: 'GET'

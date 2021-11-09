@@ -31,7 +31,7 @@ const CustomizedTables = (props) => {
   let nomRows = props.nomRows
   let rows =  props.rows
   const [fil, setFil] = useState([]);
-  const [nomFil, setNomFil] = useState();
+  const [nomFil, setNomFil] = useState([]);
 
   const nomFilas = () => {
     let f = []

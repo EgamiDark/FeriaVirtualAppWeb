@@ -14,7 +14,7 @@ const ContMisContratos = () => {
   let auth = useAuth();
   let idUsuario = auth?.user[0];
 
-  const [nomRows, setNomRows] = useState([]);
+  let nomRows = ["Fecha Creación","Fecha Termino", "Acción"];
   const [rows, setRows] = useState([]);
   const [misContratos, setMisContratos] = useState([]);
   const [reset, setReset] = useState([]);
@@ -50,7 +50,6 @@ const ContMisContratos = () => {
   },[])
 
   useEffect(() => {
-    setNomRows(["Fecha Creación","Fecha Termino", "Acción"]);
     iteRows();
   },[reset])
   

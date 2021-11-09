@@ -1,9 +1,9 @@
 import Tabla from "../Tabla"
 import { useEffect,useState } from "react";
 const ContMisPagos = () => {
-  const [nomRows, setNomRows] = useState();
+  let nomRows = ["Id Pedido","Monto a Pagar","Fecha de Pago" ,"Estado", "Acción"];
   useEffect(() => {
-    setNomRows(["Id Pedido","Monto a Pagar","Fecha de Pago" ,"Estado", "Acción"])
+    
   },[])
   return (
     <div style={{ textAlign: "center" }}>
