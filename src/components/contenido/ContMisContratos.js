@@ -17,7 +17,7 @@ const ContMisContratos = () => {
   let nomRows = ["Fecha Creación","Fecha Termino", "Acción"];
   const [rows, setRows] = useState([]);
   const [misContratos, setMisContratos] = useState([]);
-  const [reset, setReset] = useState([]);
+  const [reset, setReset] = useState(0);
 
   const iteRows = async () => {
     let r = [];
