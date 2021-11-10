@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { CrearTransporte } from "../../Api/transporte";
+import { crearTransporte } from "../../Api/transporte";
 import useAuth from '../../auth/useAuth';
 import { useEffect, useState } from "react";
 
@@ -45,7 +45,7 @@ const Añadir = () => {
     try {
       data.idUsuario = idUsuario;
 
-      const res = await CrearTransporte(JSON.stringify(data));
+      const res = await crearTransporte(JSON.stringify(data));
 
       if (res.success) {
         await MySwal.fire({

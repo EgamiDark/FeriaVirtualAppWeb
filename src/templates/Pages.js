@@ -7,6 +7,7 @@ import ContMisProductos from "../components/contenido/ContMisProductos";
 import ContMisOfertas from "../components/contenido/ContMisOfertas";
 import ContMisVehiculos from "../components/contenido/ContMisVehiculos";
 import AñadirV from "../components/crudVehiculo/Añadir"
+import ModificarV from "../components/crudVehiculo/modificarVehiculo"
 import ContPedidos from "../components/contenido/ContPedidos";
 import AñadirP from "../components/crudPedido/Añadir"
 import ContPerfil from "../components/contenido/ContPerfil";
@@ -69,4 +70,8 @@ export const OfertarSubasta = () =>{
 
 export const ModificarOfertaS = () =>{
   return <DashBoard contenido={<ModOferS/>}/>
+}
+
+export const ModificarVehiculo = () =>{
+  return <DashBoard contenido={<ModificarV/>}/>
 }
