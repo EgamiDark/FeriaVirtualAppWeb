@@ -10,8 +10,7 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import useAuth from '../../auth/useAuth';
 
-import { getOferta, postModificarOferta } from "../../Api/subasta";
-import { getTransportesUsuario } from "../../Api/transporte";
+import { getOfertaProd, postModificarOferta } from "../../Api/pedido";
 
 
 const useStyles = makeStyles(() => ({
@@ -37,56 +36,46 @@ const Ofertar = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  const [vehiculo, setVehiculo] = useState([])
-  const [selectV, setSelectV] = useState([])
   const [oferta, setOferta] = useState([])
-  const [idSubasta, setIdSubasta] = useState(0)
-  const [fecha, setFecha] = useState("")
-  const [precio, setPrecio] = useState(0)
-  const [cantidad, setCantidad] = useState(0)
-  const [patente, setPatente] = useState("")
   const [idOferta, setIdOferta] = useState(0)
+  const [precioUnidad, setPrecioUnidad] = useState(0)
+  const [kgUnidad, setKgUnidad] = useState(0)
+  const [cantidad, setCantidad] = useState(0)
+  const [fechaCosecha, setFechaCosecha] = useState("")
+  const [fechaCaducidad, setFechaCaducidad] = useState("")
+  const [idPedido, setIdPedido] = useState(0)
   const [reset, setReset] = useState(0)
 
   const classes = useStyles();
 
   const iteRows = () => {
     for (let i = 0; i < oferta.rows?.length; i++) {
-      setIdSubasta(oferta?.rows[i][0])
-      setFecha(moment(oferta?.rows[i][1]).format("YYYY-MM-DD"))
-      setPrecio(oferta?.rows[i][2])
+      setIdOferta(oferta?.rows[i][0])
+      setPrecioUnidad(oferta?.rows[i][1])
+      setKgUnidad(oferta?.rows[i][2])
       setCantidad(oferta?.rows[i][3])
-      setPatente(oferta?.rows[i][4])
-      setIdOferta(oferta?.rows[i][6])
+      setFechaCosecha(moment(oferta?.rows[i][4]).format("YYYY-MM-DD"))
+      setFechaCaducidad(moment(oferta?.rows[i][5]).format("YYYY-MM-DD"))
+      setIdPedido(oferta?.rows[i][6])
     }
-  }
-
-  const cargarVehiculo = () => {
-    let f = []
-    for (let i = 0; i < vehiculo.rows?.length; i++) {
-      f.push(<MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>)
-    }
-    setSelectV(f)
   }
 
   useEffect(async () => {
-    setVehiculo(await getTransportesUsuario(idUsuario))
-    setOferta(await getOferta(history.location.state?.idOferta))
+    setOferta(await getOfertaProd(history.location.state?.idOferta))
     setReset(1)
   }, [])
 
   useEffect(() => {
-    cargarVehiculo()
     iteRows()
   }, [reset])
 
   const modificarOferta = async (data) => {
     try {
-      data.idSubasta = idSubasta;
-      data.fechaEntrega = moment(fecha).format("DD-MM-YYYY");
-      data.precioOferta = precio;
-      data.cantidadTransporte = cantidad;
-      data.patente = patente;
+      data.precioUnidad = precioUnidad;
+      data.kgUnidad = kgUnidad;
+      data.cantidad = cantidad;
+      data.fechaCosecha = moment(fechaCosecha).format("DD-MM-YYYY");
+      data.fechaCaducidad = moment(fechaCaducidad).format("DD-MM-YYYY");
       data.idOferta = idOferta;
       const res = await postModificarOferta(JSON.stringify(data));
 
@@ -100,7 +89,7 @@ const Ofertar = () => {
           ),
           icon: "success",
         });
-        history.push("/misOfertas");
+        history.push("/misProductos");
       } else {
         await MySwal.fire({
           title: <strong>Que Mal!</strong>,
@@ -123,44 +112,61 @@ const Ofertar = () => {
 
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
-      <h1>Modificar Oferta Subasta</h1>
+      <h1>Modificar Oferta Pedido</h1>
       <form onSubmit={handleSubmit(modificarOferta)}>
         <TextField
-          name="idSubasta"
+          name="idPedido"
           className={classes.inputs}
-          label="Id Subasta "
+          label="Id Pedido"
           variant="outlined"
-          value={idSubasta}
+          value={idPedido}
           disabled
         ></TextField>
         <TextField
-          name="precioOferta"
-          {...register("precioOferta", {
+          name="precioUnidad"
+          {...register("precioUnidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
           })}
-          error={!!errors.precioOferta}
-          helperText={errors.precioOferta ? errors.precioOferta.message : ""}
+          error={!!errors.precioUnidad}
+          helperText={errors.precioUnidad ? errors.precioUnidad.message : ""}
           className={classes.inputs}
-          label="Precio Oferta*"
+          label="Precio Unidad*"
           variant="outlined"
           type="number"
-          value={precio}
+          value={precioUnidad}
           onChange={item=>{
-            setPrecio(item.target.value)
+            setPrecioUnidad(item.target.value)
           }}
         ></TextField>
         <TextField
-          name="cantidadTransporte"
-          {...register("cantidadTransporte", {
+          name="kgUnidad"
+          {...register("kgUnidad", {
+            required: "Este campo es requerido",
+            validate: "Campo no valido",
+          })}
+          error={!!errors.kgUnidad}
+          helperText={errors.kgUnidad ? errors.kgUnidad.message : ""}
+          className={classes.inputs}
+          label="KG X Unidad*"
+          variant="outlined"
+          type="number"
+          value={kgUnidad}
+          onChange={item=>{
+            setKgUnidad(item.target.value)
+          }}
+        ></TextField>
+        <TextField
+          name="cantidad"
+          {...register("cantidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
           })}
           requerid
-          error={!!errors.cantidadTransporte}
-          helperText={errors.cantidadTransporte ? errors.cantidadTransporte.message : ""}
+          error={!!errors.cantidad}
+          helperText={errors.cantidad ? errors.cantidad.message : ""}
           className={classes.inputs}
-          label="Cantidad a Transportar*"
+          label="Cantidad a Ofertar*"
           variant="outlined"
           type="number"
           value={cantidad}
@@ -169,30 +175,27 @@ const Ofertar = () => {
           }}
         ></TextField>
         <TextField
-          name="fechaEntrega"
+          name="fechaCosecha"
           className={classes.inputs}
-          label="Fecha Entrega(Aprox.)"
-          value={fecha}
+          label="Fecha Cosecha"
+          value={fechaCosecha}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("YYYY-MM-DD"))
+            setFechaCosecha(moment(item.target.value).format("YYYY-MM-DD"))
           }}
           variant="outlined"
           type="date"
-          
         ></TextField>
         <TextField
-          name="patente"
-          className={classes.selects}
-          select
-          label="Vehiculo*"
-          variant="outlined"
-          value={patente}
-          onChange={item=>{
-            setPatente(item.target.value)
+          name="fechaCaducidad"
+          className={classes.inputs}
+          label="Fecha Caducidad"
+          value={fechaCaducidad}
+          onChange={(item) => {
+            setFechaCaducidad(moment(item.target.value).format("YYYY-MM-DD"))
           }}
-        >
-          {selectV}
-        </TextField>
+          variant="outlined"
+          type="date"
+        ></TextField>
         <Button
           className={classes.selects}
           type="submit"

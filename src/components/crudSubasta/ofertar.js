@@ -105,7 +105,7 @@ const Ofertar = () => {
 
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
-      <h1>Añadir Oferta</h1>
+      <h1>Añadir Oferta Subasta</h1>
       <form onSubmit={handleSubmit(guardarOferta)}>
         <TextField
           name="idSubasta"

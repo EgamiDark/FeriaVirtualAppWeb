@@ -155,6 +155,7 @@ const ContMisVehiculos = () => {
     setMisVehiculos(await getTransportesUsuario(idUsuario));
     setTipoRefrig(await getTipoRefrig());
     setTipoTrans(await getTipoTrans());
+    setReload(0);
     setReset(1);
   }, [reload]);
 

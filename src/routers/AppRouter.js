@@ -17,7 +17,9 @@ import {
   AñadirVehiculo,
   OfertarSubasta,
   ModificarOfertaS,
-  ModificarVehiculo
+  ModificarVehiculo,
+  ModificarOfertaP,
+  OfertarProducto
 } from "../templates/Pages";
 import useAuth from '../auth/useAuth'
 import { useState } from "react";
@@ -56,7 +58,11 @@ const AppRouter = () => {
         { rol!==3 ?
         <PrivateRoute exact path="/pedidos" component={Pedidos} />:<Redirect to="/home"/>}
         { rol!==3 ?
+        <PrivateRoute exact path="/ofertarProducto" component={OfertarProducto} />:<Redirect to="/home"/>}
+        { rol!==3 ?
         <PrivateRoute exact path="/misProductos" component={MisProductos} />:<Redirect to="/home"/>}
+        { rol!==3 ?
+        <PrivateRoute exact path="/modificarOfertaP" component={ModificarOfertaP} />:<Redirect to="/home"/>}
         { rol!==3 ?
         <PrivateRoute exact path="/misContratos" component={MisContratos} />:<Redirect to="/home"/>}
         { rol!==4 ?

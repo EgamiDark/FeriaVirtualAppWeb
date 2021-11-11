@@ -75,6 +75,7 @@ const ContMisOfertas = () => {
       }
     });
   };
+  
   const iteRows = () => {
     let r = [];
     for (let i = 0; i < oferta.rows?.length; i++) {

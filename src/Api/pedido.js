@@ -40,3 +40,54 @@ export const getOfertasProd = async (idUsuario) => {
   return await res;
 };
 
+export const getOfertaProd = async (id) => {
+  let res = await fetch(API +"/api/pedido/oferta/" + id, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+
+export const postOfertar = async (bd) => {
+  let res = await fetch(API + "/api/pedido/insertarOferta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+
+export const postModificarOferta = async (bd) => {
+  let res = await fetch(API + "/api/pedido/modificarOferta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+
+export const postCancelarOferta = async (id) => {
+  let res = await fetch(API + "/api/pedido/cancelarOferta/"+id, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+

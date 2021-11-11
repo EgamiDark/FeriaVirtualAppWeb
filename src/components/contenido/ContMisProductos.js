@@ -1,12 +1,21 @@
 import Tabla from "../Tabla"
 import { useState,useEffect } from "react";
-import {getOfertasProd, getPedidos} from "../../Api/pedido"
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+import {getOfertasProd, getPedidos,postCancelarOferta} from "../../Api/pedido"
 import useAuth from '../../auth/useAuth';
 import { getEstOfertaProd, getProductos } from "../../Api/datosFk";
+import { useHistory } from "react-router-dom";
 
 import moment from "moment";
 
 const ContMisProductos = () => {
+  const MySwal = withReactContent(Swal);
+  const history = useHistory();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
   let nomRows = ["Id Pedido","Producto","Precio Unidad","KG X Unidad","Cantidad Ofertada","Fecha Cosecha","Fecha Caducidad","Estado", "Acción"];
@@ -15,7 +24,52 @@ const ContMisProductos = () => {
   const [producto,setProducto] = useState([]);
   const [pedido,setPedido] = useState([]);
   const [estOfer,setEstOfer] = useState([]);
+  const [reload,setReload] = useState(0)
   const [reset,setReset] = useState(0)
+
+  const cancelarOferta = async (id) => {
+    await MySwal.fire({
+      title: "¿Esta seguro de cancelar esta oferta?",
+      text: "Si quieres volver a ofertar deberas ir al apartado de subastas!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, cancelar oferta!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await postCancelarOferta(id);
+          if (res.success) {
+            await MySwal.fire(
+              "Cancelada!",
+              "Esta oferta ha sido cancelada.",
+              "success"
+            );
+            setReset(0);
+            setReload(1);
+          } else {
+            await MySwal.fire({
+              title: <strong>Que Mal!</strong>,
+              html: <i>Ha ocurrido un error intentelo nuevamente!</i>,
+              icon: "error",
+            });
+          }
+        } catch (error) {
+          await MySwal.fire({
+            title: <strong>Que Mal!</strong>,
+            html: (
+              <i>
+                La base de datos se encuentra en mantenimiento, intente mas
+                tarde!
+              </i>
+            ),
+            icon: "warning",
+          });
+        }
+      }
+    });
+  };
 
   const iteRows = ()=>{
     let r= [];
@@ -44,6 +98,31 @@ const ContMisProductos = () => {
           break;
         }
       }
+      f.push(
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <IconButton
+            sx={{ color: "blue" }}
+            aria-label="update"
+            onClick={() =>
+              history.push({
+                pathname: "/modificarOfertaP",
+                state: { idOferta: misProductos?.rows[i][0] },
+              })
+            }
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            sx={{ color: "red" }}
+            aria-label="delete"
+            onClick={() => {
+              cancelarOferta(misProductos?.rows[i][0]);
+            }}
+          >
+            <CancelIcon />
+          </IconButton>
+        </div>
+      );
       r.push(f)
     }
     setRows(r)
@@ -54,8 +133,9 @@ const ContMisProductos = () => {
     setProducto(await getProductos())
     setPedido(await getPedidos())
     setEstOfer(await getEstOfertaProd())
+    setReload(0)
     setReset(1)
-  },[])
+  },[reload])
   useEffect(()=>{
     iteRows()
   },[reset])

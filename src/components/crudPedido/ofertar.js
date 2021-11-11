@@ -9,21 +9,14 @@ import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import useAuth from '../../auth/useAuth';
-import enContru from "../../img/enContru.jpg";
 
-import { postOfertar } from "../../Api/subasta";
-import { getProductos } from "../../Api/datosFk";
-
+import { postOfertar } from "../../Api/pedido";
 
 const useStyles = makeStyles(() => ({
-  img:{
-    width:"100px"
-  },
   inputs: {
     textAlign: "center !important",
     width: "60% !important",
     margin: "10px 0px 10px 0px !important",
-    
   },
   selects: {
     width: "60% !important",
@@ -31,7 +24,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Añadir = () => {
+const Ofertar = () => {
   const MySwal = withReactContent(Swal);
 
   const history = useHistory();
@@ -44,37 +37,25 @@ const Añadir = () => {
   let idUsuario = auth?.user[0];
   let hoy = new Date()
   let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD")
-  const [fecha, setFecha] = useState()
-  const [producto, setProducto] = useState([])
-  const [selectP, setSelectP] = useState([])
+  const [fechaCosecha, setFechaCosecha] = useState()
+  const [fechaCaducidad, setFechaCaducidad] = useState()
   const [reset, setReset] = useState(0)
 
   const classes = useStyles();
 
-  const cargarProducto = () => {
-    let f = []
-    for (let i = 0; i < producto.rows?.length; i++) {
-      f.push(<MenuItem value={producto?.rows[i][0]}><img className={classes.img} src={enContru} />{producto?.rows[i][1]}</MenuItem>)
-    }
-    setSelectP(f)
-  }
-
-  useEffect(async () => {
-    setProducto(await getProductos())
-    setFecha(moment(fechaHoy).format("DD-MM-YYYY"))
-    setReset(1)
-  }, [])
-
   useEffect(() => {
-    cargarProducto()
+    setFechaCosecha(moment(fechaHoy).format("DD-MM-YYYY"))
+    setFechaCaducidad(moment(fechaHoy).format("DD-MM-YYYY"))
+    setReset(1)
   }, [reset])
 
   const guardarOferta = async (data) => {
 
     try {
-      data.idSubasta = history.location.state?.idSubasta;
-      data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data))
+      data.idPedido = history.location.state?.idPedido;
+      data.fechaCosecha = fechaCosecha;
+      data.fechaCaducidad = fechaCaducidad;
+      data.idUsuario = idUsuario
       const res = await postOfertar(JSON.stringify(data));
 
       if (res.success) {
@@ -87,7 +68,7 @@ const Añadir = () => {
           ),
           icon: "success",
         });
-        history.push("/misOfertas");
+        history.push("/misProductos");
       } else {
         await MySwal.fire({
           title: <strong>Que Mal!</strong>,
@@ -110,29 +91,26 @@ const Añadir = () => {
 
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
-      <h1>Añadir Pedido</h1>
+      <h1>Añadir Oferta Producto</h1>
       <form onSubmit={handleSubmit(guardarOferta)}>
-      <TextField
-          name="fechaTermino"
+        <TextField
+          name="idPedido"
           className={classes.inputs}
-          label="Fecha de termino para ofertar"
-          defaultValue={fechaHoy}
-          onChange={(item) => {
-            setFecha(moment(item.target.value).format("DD-MM-YYYY"))
-          }}
+          label="Id Pedido"
           variant="outlined"
-          type="date"
+          value={history.location.state?.idPedido}
+          disabled
         ></TextField>
         <TextField
-          name="cantidadSolicitada"
-          {...register("cantidadSolicitada", {
+          name="precioUnidad"
+          {...register("precioUnidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
           })}
-          error={!!errors.cantidadSolicitada}
-          helperText={errors.cantidadSolicitada ? errors.cantidadSolicitada.message : ""}
+          error={!!errors.precioUnidad}
+          helperText={errors.precioUnidad ? errors.precioUnidad.message : ""}
           className={classes.inputs}
-          label="Cantidad a solicitar*"
+          label="Precio Unidad*"
           variant="outlined"
           type="number"
         ></TextField>
@@ -142,40 +120,61 @@ const Añadir = () => {
             required: "Este campo es requerido",
             validate: "Campo no valido",
           })}
-          requerid
           error={!!errors.kgUnidad}
           helperText={errors.kgUnidad ? errors.kgUnidad.message : ""}
           className={classes.inputs}
-          label="Kg por Unidad*"
+          label="KG X Unidad*"
           variant="outlined"
           type="number"
         ></TextField>
         <TextField
-          name="precioMaximo"
-          {...register("precioMaximo", {
+          name="cantidad"
+          {...register("cantidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
           })}
           requerid
-          error={!!errors.precioMaximo}
-          helperText={errors.precioMaximo ? errors.precioMaximo.message : ""}
+          error={!!errors.cantidad}
+          helperText={errors.cantidad ? errors.cantidad.message : ""}
           className={classes.inputs}
-          label="Precio maximo a pagar por unidad*"
+          label="Cantidad a Ofertar*"
           variant="outlined"
           type="number"
         ></TextField>
         <TextField
-          name="producto"
-          {...register("producto", { required: "Este campo es requerido" })}
-          error={!!errors.producto}
-          helperText={errors.producto ? errors.producto.message : ""}
-          className={classes.selects}
-          select
-          label="Producto*"
+          name="fechaCosecha"
+          {...register("fechaCosecha", {
+            required: "Este campo es requerido",
+            validate: "Campo no valido",
+          })}
+          error={!!errors.fechaCosecha}
+          helperText={errors.fechaCosecha ? errors.fechaCosecha.message : ""}
+          className={classes.inputs}
+          label="Fecha Cosecha"
+          defaultValue={fechaHoy}
+          onChange={(item) => {
+            setFechaCosecha(moment(item.target.value).format("DD-MM-YYYY"))
+          }}
           variant="outlined"
-        >
-          {selectP}
-        </TextField>
+          type="date"
+        ></TextField>
+        <TextField
+          name="fechaCaducidad"
+          {...register("fechaCaducidad", {
+            required: "Este campo es requerido",
+            validate: "Campo no valido",
+          })}
+          error={!!errors.fechaCaducidad}
+          helperText={errors.fechaCaducidad ? errors.fechaCaducidad.message : ""}
+          className={classes.inputs}
+          label="Fecha Caducidad"
+          defaultValue={fechaHoy}
+          onChange={(item) => {
+            setFechaCaducidad(moment(item.target.value).format("DD-MM-YYYY"))
+          }}
+          variant="outlined"
+          type="date"
+        ></TextField>
         <Button
           className={classes.selects}
           type="submit"
@@ -189,4 +188,4 @@ const Añadir = () => {
   );
 };
 
-export default Añadir;
+export default Ofertar;
