@@ -60,6 +60,20 @@ export const getPedidoById = async (id) => {
   return await res;
 };
 
+export const postIngresarPedido = async (bd)=>{
+  let res = await fetch(API + "/api/pedido/insertar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+}
+
 export const postOfertar = async (bd) => {
   let res = await fetch(API + "/api/pedido/insertarOferta", {
     method: "POST",

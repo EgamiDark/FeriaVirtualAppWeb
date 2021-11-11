@@ -11,12 +11,12 @@ import moment from "moment";
 import useAuth from "../../auth/useAuth";
 import enContru from "../../img/enContru.jpg";
 
-import { postOfertar } from "../../Api/subasta";
+import { postIngresarPedido } from "../../Api/pedido";
 import { getProductos } from "../../Api/datosFk";
 
 const useStyles = makeStyles(() => ({
   img: {
-    width: "100px",
+    width: "50px",
   },
   inputs: {
     textAlign: "center !important",
@@ -72,20 +72,22 @@ const Añadir = () => {
     cargarProducto();
   }, [reset]);
 
-  const guardarOferta = async (data) => {
+  const guardarPedido = async (data) => {
     try {
       data.idSubasta = history.location.state?.idSubasta;
-      data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data));
-      const res = await postOfertar(JSON.stringify(data));
-
+      let f = new Date();
+      data.fechaSolicitud = moment(f.toISOString()).format("DD-MM-YYYY");
+      data.fechaTermino = fecha;
+      data.idEstadoPedido = 1;
+      data.idUsuario = idUsuario;
+      const res = await postIngresarPedido(JSON.stringify(data));
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
           html: <i>Guardado Correctamente!</i>,
           icon: "success",
         });
-        history.push("/misOfertas");
+        history.push("/misPedidos");
       } else {
         await MySwal.fire({
           title: <strong>Que Mal!</strong>,
@@ -109,7 +111,7 @@ const Añadir = () => {
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
       <h1>Añadir Pedido</h1>
-      <form onSubmit={handleSubmit(guardarOferta)}>
+      <form onSubmit={handleSubmit(guardarPedido)}>
         <TextField
           name="fechaTermino"
           className={classes.inputs}
@@ -165,10 +167,10 @@ const Añadir = () => {
           type="number"
         ></TextField>
         <TextField
-          name="producto"
-          {...register("producto", { required: "Este campo es requerido" })}
-          error={!!errors.producto}
-          helperText={errors.producto ? errors.producto.message : ""}
+          name="idProducto"
+          {...register("idProducto", { required: "Este campo es requerido" })}
+          error={!!errors.idProducto}
+          helperText={errors.idProducto ? errors.idProducto.message : ""}
           className={classes.selects}
           select
           label="Producto*"
