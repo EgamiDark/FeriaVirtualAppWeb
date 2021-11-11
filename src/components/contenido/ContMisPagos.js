@@ -2,9 +2,6 @@ import Tabla from "../Tabla"
 import { useEffect,useState } from "react";
 import useAuth from "../../auth/useAuth";
 
-import IconButton from '@mui/material/IconButton';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-
 import { getEstPago } from "../../Api/datosFk";
 import { getMispagos } from "../../Api/pagos";
 
@@ -14,7 +11,7 @@ const ContMisPagos = () => {
   let auth = useAuth();
   let idUsuario = auth?.user[0];
 
-  let nomRows = ["Id Pedido","Monto a Pagar","Fecha de Pago" ,"Estado", "Acción"];
+  let nomRows = ["Id Pedido","Monto a Pagar","Fecha de Pago" ,"Estado"];
 
   const [estadosPago, setEstadosPagos] = useState([]);
   const [rows, setRows] = useState([]);
@@ -38,11 +35,6 @@ const ContMisPagos = () => {
           break;
         }
       }
-
-      f.push(<div>
-        <IconButton sx={{ color: "green"}} aria-label="add">
-          <MonetizationOnIcon />
-        </IconButton></div>)
 
       r.push(f);      
     }

@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -8,22 +8,20 @@ import withReactContent from "sweetalert2-react-content";
 import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
-import useAuth from '../../auth/useAuth';
+import useAuth from "../../auth/useAuth";
 import enContru from "../../img/enContru.jpg";
 
 import { postOfertar } from "../../Api/subasta";
 import { getProductos } from "../../Api/datosFk";
 
-
 const useStyles = makeStyles(() => ({
-  img:{
-    width:"100px"
+  img: {
+    width: "100px",
   },
   inputs: {
     textAlign: "center !important",
     width: "60% !important",
     margin: "10px 0px 10px 0px !important",
-    
   },
   selects: {
     width: "60% !important",
@@ -42,49 +40,49 @@ const Añadir = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let hoy = new Date()
-  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD")
-  const [fecha, setFecha] = useState()
-  const [producto, setProducto] = useState([])
-  const [selectP, setSelectP] = useState([])
-  const [reset, setReset] = useState(0)
+  let hoy = new Date();
+  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
+  const [fecha, setFecha] = useState();
+  const [producto, setProducto] = useState([]);
+  const [selectP, setSelectP] = useState([]);
+  const [reset, setReset] = useState(0);
 
   const classes = useStyles();
 
   const cargarProducto = () => {
-    let f = []
+    let f = [];
     for (let i = 0; i < producto.rows?.length; i++) {
-      f.push(<MenuItem value={producto?.rows[i][0]}><img className={classes.img} src={enContru} />{producto?.rows[i][1]}</MenuItem>)
+      f.push(
+        <MenuItem value={producto?.rows[i][0]}>
+          <img className={classes.img} src={enContru} />
+          {producto?.rows[i][1]}
+        </MenuItem>
+      );
     }
-    setSelectP(f)
-  }
+    setSelectP(f);
+  };
 
   useEffect(async () => {
-    setProducto(await getProductos())
-    setFecha(moment(fechaHoy).format("DD-MM-YYYY"))
-    setReset(1)
-  }, [])
+    setProducto(await getProductos());
+    setFecha(moment(fechaHoy).format("DD-MM-YYYY"));
+    setReset(1);
+  }, []);
 
   useEffect(() => {
-    cargarProducto()
-  }, [reset])
+    cargarProducto();
+  }, [reset]);
 
   const guardarOferta = async (data) => {
-
     try {
       data.idSubasta = history.location.state?.idSubasta;
       data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data))
+      console.log(JSON.stringify(data));
       const res = await postOfertar(JSON.stringify(data));
 
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
-          html: (
-            <i>
-              Guardado Correctamente!
-            </i>
-          ),
+          html: <i>Guardado Correctamente!</i>,
           icon: "success",
         });
         history.push("/misOfertas");
@@ -112,13 +110,13 @@ const Añadir = () => {
     <div style={{ textAlign: "center", width: "100%" }}>
       <h1>Añadir Pedido</h1>
       <form onSubmit={handleSubmit(guardarOferta)}>
-      <TextField
+        <TextField
           name="fechaTermino"
           className={classes.inputs}
           label="Fecha de termino para ofertar"
           defaultValue={fechaHoy}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("DD-MM-YYYY"))
+            setFecha(moment(item.target.value).format("DD-MM-YYYY"));
           }}
           variant="outlined"
           type="date"
@@ -130,7 +128,9 @@ const Añadir = () => {
             validate: "Campo no valido",
           })}
           error={!!errors.cantidadSolicitada}
-          helperText={errors.cantidadSolicitada ? errors.cantidadSolicitada.message : ""}
+          helperText={
+            errors.cantidadSolicitada ? errors.cantidadSolicitada.message : ""
+          }
           className={classes.inputs}
           label="Cantidad a solicitar*"
           variant="outlined"

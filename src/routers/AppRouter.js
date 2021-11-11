@@ -14,6 +14,7 @@ import {
   MisVehiculos,
   Perfil,
   AñadirPedido,
+  ModificarPedido,
   AñadirVehiculo,
   OfertarSubasta,
   ModificarOfertaS,
@@ -67,6 +68,8 @@ const AppRouter = () => {
         <PrivateRoute exact path="/misContratos" component={MisContratos} />:<Redirect to="/home"/>}
         { rol!==4 ?
         <PrivateRoute exact path="/misPedidos" component={MisPedidos} />:<Redirect to="/home"/>}
+        { rol!==4 ?
+        <PrivateRoute exact path="/modificarPedido" component={ModificarPedido} />:<Redirect to="/home"/>}
         { rol!==4 ?
         <PrivateRoute exact path="/añadirPedido" component={AñadirPedido} />:<Redirect to="/home"/>}
         { rol!==4 ?

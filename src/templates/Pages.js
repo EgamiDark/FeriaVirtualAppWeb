@@ -10,6 +10,7 @@ import AñadirV from "../components/crudVehiculo/Añadir"
 import ModificarV from "../components/crudVehiculo/modificarVehiculo"
 import ContPedidos from "../components/contenido/ContPedidos";
 import AñadirP from "../components/crudPedido/Añadir"
+import ModificarP from "../components/crudPedido/modificarPedido"
 import OferProd from "../components/crudPedido/ofertar"
 import ModOferP from "../components/crudPedido/modificarOferta"
 import ContPerfil from "../components/contenido/ContPerfil";
@@ -56,6 +57,10 @@ export const Pedidos = () => {
 
 export const AñadirPedido = () =>{
   return <DashBoard contenido={<AñadirP/>}/>
+}
+
+export const ModificarPedido = () =>{
+  return <DashBoard contenido={<ModificarP/>}/>
 }
 
 export const OfertarProducto = () =>{

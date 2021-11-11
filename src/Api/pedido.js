@@ -50,6 +50,16 @@ export const getOfertaProd = async (id) => {
   return await res;
 };
 
+export const getPedidoById = async (id) => {
+  let res = await fetch(API +"/api/pedido/obtener/" + id, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+
 export const postOfertar = async (bd) => {
   let res = await fetch(API + "/api/pedido/insertarOferta", {
     method: "POST",
@@ -78,8 +88,35 @@ export const postModificarOferta = async (bd) => {
   return res;
 };
 
+export const postModificarPedido = async (bd) => {
+  let res = await fetch(API + "/api/pedido/modificar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: bd,
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+
 export const postCancelarOferta = async (id) => {
   let res = await fetch(API + "/api/pedido/cancelarOferta/"+id, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+
+export const postCancelarPedido = async (idPedido) => {
+  let res = await fetch(API + "/api/pedido/cancelarPedido/"+idPedido, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
