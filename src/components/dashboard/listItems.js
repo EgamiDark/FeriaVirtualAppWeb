@@ -24,56 +24,80 @@ const MainListItems = ()=>{
       </ListItemIcon>
       <ListItemText primary="Home" />
     </ListItemButton>
-    { rol!==2 ?
+    { rol===2 ?
     <ListItemButton onClick={()=>history.push("/subastas")}>
       <ListItemIcon>
         <AddShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Subastas" />
     </ListItemButton>:<></>}
-    { rol!==2 ?
+    { rol===2 ?
     <ListItemButton onClick={()=>history.push("/misOfertas")}>
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
       <ListItemText primary="Mis Ofertas" />
     </ListItemButton>:<></>}
-    { rol!==2 ?
+    { rol===2 ?
     <ListItemButton onClick={()=>history.push("/misVehiculos")}>
       <ListItemIcon>
         <LocalShipping />
       </ListItemIcon>
       <ListItemText primary="Mis Vehiculos" />
     </ListItemButton>:<></>}
-    { rol!==3 ?
+    { rol===3 ?
     <ListItemButton onClick={()=>history.push("/pedidos")}>
       <ListItemIcon>
       <AddShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Pedidos" />
     </ListItemButton>:<></>}
-    { rol!==3 ?
+    { rol===3 ?
     <ListItemButton onClick={()=>history.push("/misProductos")}>
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
       <ListItemText primary="Mis Productos" />
     </ListItemButton>:<></>}
-    { rol!==3 ?
+    { rol===3 ?
     <ListItemButton onClick={()=>history.push("/misContratos")}>
       <ListItemIcon>
         <Book />
       </ListItemIcon>
       <ListItemText primary="Mis Contratos" />
     </ListItemButton>:<></>}
-    { rol!==4 ?
+    { rol===4 ?
     <ListItemButton onClick={()=>history.push("/misPedidos")}>
       <ListItemIcon>
         <ShoppingCart />
       </ListItemIcon>
       <ListItemText primary="Mis Pedidos" />
     </ListItemButton>:<></>}
-    { rol!==4 ?
+    { rol===4 ?
+    <ListItemButton onClick={()=>history.push("/misPagos")}>
+      <ListItemIcon>
+        <AttachMoney />
+      </ListItemIcon>
+      <ListItemText primary="Mis Pagos" />
+    </ListItemButton>:<></>}
+
+    { rol===5 ?
+    <ListItemButton onClick={()=>history.push("/ofertasVL")}>
+      <ListItemIcon>
+        <Sell />
+      </ListItemIcon>
+      <ListItemText primary="Mis Ofertas" />
+    </ListItemButton>:<></>}
+
+    { rol===5 ?
+    <ListItemButton onClick={()=>history.push("/misPedidos")}>
+      <ListItemIcon>
+        <ShoppingCart />
+      </ListItemIcon>
+      <ListItemText primary="Mis Pedidos" />
+    </ListItemButton>:<></>}
+
+    { rol===5 ?
     <ListItemButton onClick={()=>history.push("/misPagos")}>
       <ListItemIcon>
         <AttachMoney />

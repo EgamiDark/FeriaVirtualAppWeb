@@ -18,6 +18,7 @@ import ContSubastas from "../components/contenido/ContSubastas";
 import OferSubasta from "../components/crudSubasta/ofertar"
 import ModOferS from "../components/crudSubasta/modificarOferta"
 import DashBoard from "../components/dashboard/Dashboard";
+import OfertasVL from "../components/contenido/ContProductos";
 
 export const Home = () => {
   return <DashBoard contenido={<ContHome/>}/>
@@ -89,4 +90,8 @@ export const ModificarOfertaS = () =>{
 
 export const ModificarVehiculo = () =>{
   return <DashBoard contenido={<ModificarV/>}/>
+}
+
+export const OfertasVentaLocal = () =>{
+  return <DashBoard contenido={<OfertasVL/>}/>
 }

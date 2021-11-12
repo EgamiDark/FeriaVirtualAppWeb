@@ -20,7 +20,8 @@ import {
   ModificarOfertaS,
   ModificarVehiculo,
   ModificarOfertaP,
-  OfertarProducto
+  OfertarProducto,
+  OfertasVentaLocal
 } from "../templates/Pages";
 import useAuth from '../auth/useAuth'
 import { useState } from "react";
@@ -42,38 +43,23 @@ const AppRouter = () => {
         <Route exact path="/" component={SignIn} />
         <Route exact path="/login" component={SignIn} />
         <PrivateRoute exact path="/home" component={Home} />
-        { rol!==2 ?
-        <PrivateRoute exact path="/subastas" component={Subastas} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/ofertarSubasta" component={OfertarSubasta} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/modificarOfertaS" component={ModificarOfertaS} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/misOfertas" component={MisOfertas} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/misVehiculos" component={MisVehiculos} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/añadirVehiculo" component={AñadirVehiculo} />:<Redirect to="/home"/>}
-        { rol!==2 ?
-        <PrivateRoute exact path="/modificarVehiculo" component={ModificarVehiculo} />:<Redirect to="/home"/>}
-        { rol!==3 ?
-        <PrivateRoute exact path="/pedidos" component={Pedidos} />:<Redirect to="/home"/>}
-        { rol!==3 ?
-        <PrivateRoute exact path="/ofertarProducto" component={OfertarProducto} />:<Redirect to="/home"/>}
-        { rol!==3 ?
-        <PrivateRoute exact path="/misProductos" component={MisProductos} />:<Redirect to="/home"/>}
-        { rol!==3 ?
-        <PrivateRoute exact path="/modificarOfertaP" component={ModificarOfertaP} />:<Redirect to="/home"/>}
-        { rol!==3 ?
-        <PrivateRoute exact path="/misContratos" component={MisContratos} />:<Redirect to="/home"/>}
-        { rol!==4 ?
-        <PrivateRoute exact path="/misPedidos" component={MisPedidos} />:<Redirect to="/home"/>}
-        { rol!==4 ?
-        <PrivateRoute exact path="/modificarPedido" component={ModificarPedido} />:<Redirect to="/home"/>}
-        { rol!==4 ?
-        <PrivateRoute exact path="/añadirPedido" component={AñadirPedido} />:<Redirect to="/home"/>}
-        { rol!==4 ?
-        <PrivateRoute exact path="/misPagos" component={MisPagos} />:<Redirect to="/home"/>}
+        <PrivateRoute exact path="/subastas" component={Subastas} />
+        <PrivateRoute exact path="/ofertarSubasta" component={OfertarSubasta} />
+        <PrivateRoute exact path="/modificarOfertaS" component={ModificarOfertaS} />
+        <PrivateRoute exact path="/misOfertas" component={MisOfertas} />
+        <PrivateRoute exact path="/misVehiculos" component={MisVehiculos} />
+        <PrivateRoute exact path="/añadirVehiculo" component={AñadirVehiculo} />
+        <PrivateRoute exact path="/modificarVehiculo" component={ModificarVehiculo} />
+        <PrivateRoute exact path="/pedidos" component={Pedidos} />
+        <PrivateRoute exact path="/ofertarProducto" component={OfertarProducto} />
+        <PrivateRoute exact path="/misProductos" component={MisProductos} />
+        <PrivateRoute exact path="/modificarOfertaP" component={ModificarOfertaP} />
+        <PrivateRoute exact path="/misContratos" component={MisContratos} />
+        <PrivateRoute exact path="/misPedidos" component={MisPedidos} />
+        <PrivateRoute exact path="/modificarPedido" component={ModificarPedido} />
+        <PrivateRoute exact path="/añadirPedido" component={AñadirPedido} />
+        <PrivateRoute exact path="/misPagos" component={MisPagos} />
+        <PrivateRoute exact path="/ofertasVL" component={OfertasVentaLocal} />
         <PrivateRoute exact path="/perfil" component={Perfil} />
         <Route path="*" component={Error404} />
       </Switch>
