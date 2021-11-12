@@ -11,6 +11,8 @@ import { crearTransporte } from "../../Api/transporte";
 import useAuth from '../../auth/useAuth';
 import { useEffect, useState } from "react";
 
+import { getTipoRefrig, getTipoTrans } from "../../Api/datosFk";
+
 const useStyles = makeStyles(() => ({
   inputs: {
     textAlign: "center !important" ,
@@ -25,8 +27,12 @@ const useStyles = makeStyles(() => ({
 
 const Añadir = () => {
   let auth = useAuth();
-  const [idUsuario, setIdUsuario] = useState(0);
-
+  let idUsuario = auth?.user[0]
+  const [tiposRef, setTiposRef] = useState([]); // -> todos
+  const [tiposTransp, setTiposTransp] = useState([]); // -> todos
+  const [sTipoRef, setSTipoRef] = useState([]);
+  const [sTipoVehic, setSTipoVehic] = useState([]);
+  const [reset, setReset] = useState(0);
   const MySwal = withReactContent(Swal);
   const history = useHistory();
   const {
@@ -35,12 +41,39 @@ const Añadir = () => {
     formState: { errors },
   } = useForm();
 
-  useEffect(()=>{
-    if(auth.user){
-      console.log(auth.user[0])
-      setIdUsuario(auth.user[0]);
+  const cargarTipoRef = () => {
+    let f = [];
+    for (let i = 0; i < tiposRef.rows?.length; i++) {
+      f.push(
+        <MenuItem value={tiposRef?.rows[i][0]}>{tiposRef?.rows[i][1]}</MenuItem>
+      );
     }
+    setSTipoRef(f);
+  };
+
+  const cargarTipoVehic = () => {
+    let f = [];
+    for (let i = 0; i < tiposTransp.rows?.length; i++) {
+      f.push(
+        <MenuItem value={tiposTransp?.rows[i][0]}>
+          {tiposTransp?.rows[i][1]}
+        </MenuItem>
+      );
+    }
+    setSTipoVehic(f);
+  };
+
+  useEffect(async ()=>{
+    setTiposRef(await getTipoRefrig());
+    setTiposTransp(await getTipoTrans());
+    setReset(1)
   },[])
+
+  useEffect(()=>{
+    cargarTipoRef();
+    cargarTipoVehic();
+  },[reset])
+
   const guardarTransporte = async (data) => {
     try {
       data.idUsuario = idUsuario;
@@ -115,16 +148,6 @@ const Añadir = () => {
           variant="standard"
         ></TextField>
         <TextField
-          name="actividad"
-          {...register("actividad", {
-            required: "required",
-            validate: "validation",
-          })}
-          className={classes.inputs}
-          label="Actividad"
-          variant="standard"
-        ></TextField>
-        <TextField
           name="idTipoRefrig"
           {...register("idTipoRefrig", { required: "required" })}
           className={classes.inputs}
@@ -133,7 +156,7 @@ const Añadir = () => {
           variant="standard"
           helperText="Seleccione un tipo de refrigeración"
         >
-          <MenuItem value={1}>Ten</MenuItem>
+          {sTipoRef}
         </TextField>
         <TextField
           name="idTipoTrans"
@@ -144,7 +167,7 @@ const Añadir = () => {
           variant="standard"
           helperText="Seleccione un tipo de transporte"
         >
-          <MenuItem value={1}>Ten</MenuItem>
+          {sTipoVehic}
         </TextField>
         <Button
           className={classes.selects}

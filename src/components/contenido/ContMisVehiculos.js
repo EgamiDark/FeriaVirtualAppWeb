@@ -170,7 +170,7 @@ const ContMisVehiculos = () => {
         <IconButton
           sx={{ color: "white", backgroundColor: "green" }}
           aria-label="add"
-          onClick={() => history.push({ pathname: "/modificarVehiculo" })}
+          onClick={() => history.push({ pathname: "/añadirVehiculo" })}
         >
           <AddIcon />
         </IconButton>
