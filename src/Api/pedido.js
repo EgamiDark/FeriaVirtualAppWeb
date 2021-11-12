@@ -20,6 +20,16 @@ export const getPedidos = async () => {
   return await res;
 };
 
+export const getOferPByPedido = async (idPedido) => {
+  let res = await fetch(API +"/api/pedido/obtener/ofertP/" + idPedido, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+
 export const getPedidosUsuario = async (idUsuario) => {
   let res = await fetch(API +"/api/pedido/obtener/todos/usuario/" + idUsuario, {
     method: 'GET'

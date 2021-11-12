@@ -90,7 +90,7 @@ const MainListItems = ()=>{
     </ListItemButton>:<></>}
 
     { rol===5 ?
-    <ListItemButton onClick={()=>history.push("/misPedidos")}>
+    <ListItemButton onClick={()=>history.push("/misVL")}>
       <ListItemIcon>
         <ShoppingCart />
       </ListItemIcon>

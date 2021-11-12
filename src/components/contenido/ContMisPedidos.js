@@ -7,6 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 import { makeStyles } from "@mui/styles";
 
 import Swal from "sweetalert2";
@@ -16,14 +19,72 @@ import Tabla from "../Tabla";
 import useAuth from "../../auth/useAuth";
 import moment from "moment";
 
-import { getPedidosUsuario, postCancelarPedido } from "../../Api/pedido";
+import {
+  getPedidosUsuario,
+  postCancelarPedido,
+  getOferPByPedido,
+} from "../../Api/pedido";
 import { getEstPedido, getProductos } from "../../Api/datosFk";
 
+const useStyles = makeStyles(() => ({
+  inputs: {
+    textAlign: "center !important",
+    width: "100% !important",
+    margin: "10px 0px 10px 0px !important",
+  },
+  selects: {
+    width: "60% !important",
+    margin: "10px 0px 10px 0px !important",
+  },
+}));
+
 const ContMisPedidos = () => {
+  const [open, setOpen] = React.useState(false);
+  const [ofertasProd, setOfertasProd] = useState([]);
+  const [rowsOfertas, setRowsOfertas] = useState([]);
+
+  const handleOpen = async (idPedido) => {
+    console.log(idPedido)
+    setOpen(true);
+    setOfertasProd(await getOferPByPedido(idPedido));
+    console.log(ofertasProd)
+
+    let r = [];
+
+    for (let i = 0; i < misPedidos.rows?.length; i++) {
+      let f = [];
+
+      f.push(ofertasProd?.rows[i][0]);
+      f.push(ofertasProd?.rows[i][1]);
+      f.push(ofertasProd?.rows[i][2]);
+      f.push(ofertasProd?.rows[i][3]);
+      f.push(ofertasProd?.rows[i][4]);
+
+      r.push(f);
+    }
+
+    setRowsOfertas(r);
+  };
+  const handleClose = () => setOpen(false);
+
+  const classes = useStyles();
+
+  const styleModal = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "60%",
+    bgcolor: "white",
+    border: "1px solid gray",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+  };
+
   const MySwal = withReactContent(Swal);
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let idRol = auth?.user[9];
 
   const history = useHistory();
   const [productos, setProductos] = useState([]);
@@ -38,8 +99,17 @@ const ContMisPedidos = () => {
     "Estado",
     "Acción",
   ];
+
+  let nomRowsOfertasP = [
+    "Id",
+    "Precio Unidad",
+    "Cantidad Solicitada",
+    "Fecha Cosecha",
+    "Fecha Caducidad",
+  ];
   const [rows, setRows] = useState([]);
   const [misPedidos, setMisPedidos] = useState([]);
+
   const [reset, setReset] = useState(0);
   const [reload, setReload] = useState(0);
 
@@ -133,6 +203,10 @@ const ContMisPedidos = () => {
                 <EditIcon />
               </IconButton>
 
+              <IconButton sx={{ color: "blue" }} onClick={handleOpen(misPedidos?.rows[i][0])}>
+                <FormatListBulletedIcon />
+              </IconButton>
+
               <IconButton
                 sx={{ color: "red" }}
                 aria-label="act/desac"
@@ -189,6 +263,16 @@ const ContMisPedidos = () => {
         </IconButton>
       </div>
       <Tabla nomRows={nomRows} rows={rows} />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleModal}>
+          <Tabla nomRows={nomRowsOfertasP} rows={rowsOfertas} />
+        </Box>
+      </Modal>
     </div>
   );
 };

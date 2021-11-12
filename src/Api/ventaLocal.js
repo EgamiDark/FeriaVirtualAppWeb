@@ -25,15 +25,24 @@ export const comprarVL = async (data) => {
 };
 
 export const cambiaEstOfertaVL = async (data) => {
-    console.log(data)
-    let res = await fetch(API + "/api/ventaLocal/ofertaVL/aceptada", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data,
-    })
-      .then((r) => r.json())
-      .catch((err) => err);
-    return await res;
-  };
+  let res = await fetch(API + "/api/ventaLocal/ofertaVL/aceptada", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  })
+    .then((r) => r.json())
+    .catch((err) => err);
+  return await res;
+};
+
+export const getVentasLocalesUsuario = async (idUsuario) => {
+  let res = await fetch(API + "/api/ventaLocal/todos/usuario/" + idUsuario, {
+    method: "GET",
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return await res;
+};
