@@ -52,9 +52,10 @@ const Añadir = () => {
   const cargarProducto = () => {
     let f = [];
     for (let i = 0; i < producto.rows?.length; i++) {
+      let img = "data:image/png;base64, "+producto?.rows[i][3];
       f.push(
         <MenuItem value={producto?.rows[i][0]}>
-          <img className={classes.img} src={enContru} />
+          <img className={classes.img} src={img} />
           {producto?.rows[i][1]}
         </MenuItem>
       );

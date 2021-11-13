@@ -39,34 +39,35 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ContMisPedidos = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [ofertasProd, setOfertasProd] = useState([]);
   const [rowsOfertas, setRowsOfertas] = useState([]);
 
-  const handleOpen = async (idPedido) => {
-    console.log(idPedido)
-    setOpen(true);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const ofertas = async (idPedido) => {
     setOfertasProd(await getOferPByPedido(idPedido));
-    console.log(ofertasProd)
+    console.log(ofertasProd);
 
     let r = [];
 
-    for (let i = 0; i < misPedidos.rows?.length; i++) {
+    for (let i = 0; i < ofertasProd.rows?.length; i++) {
       let f = [];
 
       f.push(ofertasProd?.rows[i][0]);
       f.push(ofertasProd?.rows[i][1]);
       f.push(ofertasProd?.rows[i][2]);
       f.push(ofertasProd?.rows[i][3]);
-      f.push(ofertasProd?.rows[i][4]);
+      f.push(moment(ofertasProd?.rows[i][4]).format("DD/MM/YYYY"));
 
       r.push(f);
     }
 
     setRowsOfertas(r);
+    setReset(0);
   };
-  const handleClose = () => setOpen(false);
-
+  
   const classes = useStyles();
 
   const styleModal = {
@@ -203,7 +204,7 @@ const ContMisPedidos = () => {
                 <EditIcon />
               </IconButton>
 
-              <IconButton sx={{ color: "blue" }} onClick={handleOpen(misPedidos?.rows[i][0])}>
+              <IconButton sx={{ color: "blue" }} onClick={ofertas(misPedidos?.rows[i][0]),handleOpen}>
                 <FormatListBulletedIcon />
               </IconButton>
 
