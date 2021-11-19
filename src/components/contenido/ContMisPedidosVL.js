@@ -8,43 +8,56 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 import useAuth from "../../auth/useAuth";
 
-import { getVentasLocalesUsuario, getOfertasVentalocal } from "../../Api/ventaLocal";
-import { getEstOfertaProd, getProductos } from "../../Api/datosFk";
-import { getPedidos } from "../../Api/pedido"
+import {
+  getVentasLocalesUsuario,
+  getOfertasProductos,
+} from "../../Api/ventaLocal";
+import { getProductos } from "../../Api/datosFk";
+import { getPedidos } from "../../Api/pedido";
 
 const ContProductos = () => {
   let auth = useAuth();
   let idUsuario = auth?.user[0];
 
-  let nomRows = [
-    "Producto",
-    "Monto Total",
-  ];
+  let nomRows = ["Producto", "Monto Total", "Acciones"];
 
   const [rows, setRows] = useState([]);
+  const [pedido, setPedido] = useState([]);
   const [productos, setProductos] = useState([]);
   const [misVentasLocales, setMisVentasLocales] = useState([]);
+  const [ofertasProductos, setOfertasProductos] = useState([]);
 
-  const [ventaLocal, setVentaLocal] = useState([]);
-  const [pedido, setPedido] = useState([]);
-  const [reload, setReload] = useState(0);
   const [reset, setReset] = useState(0);
+  const [reload, setReload] = useState(0);
 
   const iteRows = () => {
     let r = [];
+    
     for (let i = 0; i < misVentasLocales.rows?.length; i++) {
       let f = [];
 
-      for (let p = 0; p < ventaLocal.rows?.length; p++) {
-        if (ventaLocal?.rows[p][2] == misVentasLocales?.rows[i][6]) {
-          for (let pr = 0; pr < productos.rows?.length; pr++) {
-            if (misVentasLocales?.rows[p][8] == productos?.rows[pr][0]) {
-              // Esto setea el nombre del producto
-              f.push(productos?.rows[pr][1]);
-              break;
+      // venta local
+      for (let op = 0; op < ofertasProductos.rows?.length; op++) {
+
+        // obtiene ofertas productos relacionadas con la venta local
+        if (ofertasProductos?.rows[op][0] == misVentasLocales?.rows[i][2]) {
+          // pedido
+          for (let pe = 0; pe < pedido.rows?.length; pe++) {
+
+            // busca el pedido correspondiente a la oferta producto
+            if (pedido?.rows[pe][0] == ofertasProductos?.rows[op][6]) {
+              // productos
+              for (let pr = 0; pr < productos.rows?.length; pr++) {
+
+                // busca el producto correspondiente al pedido
+                if (productos?.rows[pr][0] == pedido?.rows[pe][8]) {
+                  // Esto setea el nombre del producto
+                  f.push(productos?.rows[pr][1]);
+                  break;
+                }
+              }
             }
           }
-          break;
         }
       }
 
@@ -61,20 +74,28 @@ const ContProductos = () => {
     }
     setRows(r);
   };
-  console.log(misVentasLocales)
 
   useEffect(async () => {
+    // Obtiene todos los productos
     setProductos(await getProductos());
-    setVentaLocal(await getOfertasVentalocal());
+
+    // Obtiene todos los pedidos
+    setPedido(await getPedidos());
+
+    // Obtiene entas Locales de un Usuario por id del mismo
     setMisVentasLocales(await getVentasLocalesUsuario(idUsuario));
-    setPedido(await getPedidos())
+
+    // Obtiene ofertas productos
+    setOfertasProductos(await getOfertasProductos());
+
     setReload(0);
     setReset(1);
-    console.log(ventaLocal);
   }, [reload]);
+
   useEffect(() => {
     iteRows();
   }, [reset]);
+
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Mis Ofertas(Productos)</h1>
