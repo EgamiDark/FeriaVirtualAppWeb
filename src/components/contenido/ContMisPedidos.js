@@ -67,7 +67,7 @@ const ContMisPedidos = () => {
     setRowsOfertas(r);
     setReset(0);
   };
-  
+
   const classes = useStyles();
 
   const styleModal = {
@@ -204,7 +204,10 @@ const ContMisPedidos = () => {
                 <EditIcon />
               </IconButton>
 
-              <IconButton sx={{ color: "blue" }} onClick={ofertas(misPedidos?.rows[i][0]),handleOpen}>
+              <IconButton
+                sx={{ color: "blue" }}
+                onClick={(ofertas(misPedidos?.rows[i][0]), handleOpen)}
+              >
                 <FormatListBulletedIcon />
               </IconButton>
 
@@ -221,9 +224,11 @@ const ContMisPedidos = () => {
           );
           break;
         case 2:
-          <p style={{ color: "green", fontWeight: "bold" }}>
-            PROCESO FINALIZADO
-          </p>;
+          f.push(
+            <p style={{ color: "green", fontWeight: "bold" }}>
+              FINALIZADO
+            </p>
+          );
           break;
         case 3:
           f.push(

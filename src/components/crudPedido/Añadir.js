@@ -9,7 +9,6 @@ import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import useAuth from "../../auth/useAuth";
-import enContru from "../../img/enContru.jpg";
 
 import { postIngresarPedido } from "../../Api/pedido";
 import { getProductos } from "../../Api/datosFk";

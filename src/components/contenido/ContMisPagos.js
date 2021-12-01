@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import useAuth from "../../auth/useAuth";
+import { useForm } from "react-hook-form";
 
 // Material UI
 import IconButton from "@mui/material/IconButton";
@@ -11,10 +11,15 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 
+// Sweetalert2
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+import useAuth from "../../auth/useAuth";
 import Tabla from "../Tabla";
 
 import { getEstPago } from "../../Api/datosFk";
-import { getMispagos } from "../../Api/pagos";
+import { getMispagos, cambiaEstadoPago } from "../../Api/pagos";
 
 import moment from "moment";
 
@@ -31,9 +36,52 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ContMisPagos = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const MySwal = withReactContent(Swal);
+
+  const { handleSubmit } = useForm();
+
+  const [open, setOpen] = useState(false);
+  const [montoTotal, setMontoTotal] = useState(0);
+  const [idPago, setIdPago] = useState(0);
+  const [estadosPago, setEstadosPagos] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [misPagos, setMisPagos] = useState([]);
+  const [reset, setReset] = useState(0);
+  const [reload, setReload] = useState(0);
+
+  const handleOpen = (pedido) => {
+    setOpen(true);
+    setMontoTotal(pedido[3]);
+    setIdPago(pedido[0]);
+  };
+
+  const cambiarEstado = async () => {
+    try {
+      console.log("Id del pago: " + idPago);
+      const res = await cambiaEstadoPago(JSON.stringify({ idPago }));
+      if (res.success) {
+        setOpen(false);
+        await MySwal.fire({
+          title: <strong>Exito!</strong>,
+          html: <i>Guardado Correctamente!</i>,
+          icon: "success",
+        });
+        setReset(0);
+        setReload(1);
+      } else {
+        setOpen(false);
+        await MySwal.fire({
+          title: <strong>Que Mal!</strong>,
+          html: <i>Los datos ingresados son incorrectos!</i>,
+          icon: "error",
+        });
+      }
+    } catch (error) {}
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const classes = useStyles();
 
@@ -47,7 +95,7 @@ const ContMisPagos = () => {
     border: "1px solid gray",
     boxShadow: 24,
     p: 4,
-    borderRadius: 2
+    borderRadius: 2,
   };
 
   let auth = useAuth();
@@ -55,16 +103,11 @@ const ContMisPagos = () => {
 
   let nomRows = [
     "Id Pedido",
-    "Monto a Pagar",
+    "Monto Total",
     "Fecha de Pago",
     "Estado",
     "Pagar",
   ];
-
-  const [estadosPago, setEstadosPagos] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [misPagos, setMisPagos] = useState([]);
-  const [reset, setReset] = useState(0);
 
   const iteRows = async () => {
     let r = [];
@@ -72,27 +115,40 @@ const ContMisPagos = () => {
     for (let i = 0; i < misPagos.rows?.length; i++) {
       let f = [];
 
+      // Id
       f.push(misPagos?.rows[i][0]);
-      f.push(misPagos?.rows[i][1]);
+
+      // Monto Total
+      f.push(misPagos?.rows[i][3]);
+
       let fechaPago = moment(misPagos?.rows[i][2]).format(
         "DD/MM/YYYY hh:mm:ss"
       );
       f.push(fechaPago);
 
       for (let e = 0; e < estadosPago.rows?.length; e++) {
-        if (misPagos?.rows[i][3] == estadosPago?.rows[e][0]) {
+        if (misPagos?.rows[i][5] == estadosPago?.rows[e][0]) {
           f.push(estadosPago?.rows[e][1]);
-          break;
+          if (estadosPago?.rows[e][0] == 1) {
+            f.push(
+              <div>
+                <IconButton
+                  sx={{ color: "blue" }}
+                  onClick={() => {
+                    handleOpen(misPagos?.rows[i]);
+                  }}
+                >
+                  <MonetizationOnIcon />
+                </IconButton>
+              </div>
+            );
+            break;
+          } else {
+            f.push(<strong style={{ color: "green" }}>Terminado</strong>);
+            break;
+          }
         }
       }
-
-      f.push(
-        <div>
-          <IconButton sx={{ color: "blue" }} onClick={handleOpen}>
-            <MonetizationOnIcon />
-          </IconButton>
-        </div>
-      );
 
       r.push(f);
     }
@@ -103,8 +159,9 @@ const ContMisPagos = () => {
   useEffect(async () => {
     setEstadosPagos(await getEstPago());
     setMisPagos(await getMispagos(idUsuario));
+    setReload(0);
     setReset(1);
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     iteRows();
@@ -120,7 +177,7 @@ const ContMisPagos = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleModal}>
-          <form>
+          <form onSubmit={handleSubmit(cambiarEstado)}>
             <div style={{ textAlign: "center" }}>
               <h1>Realizar Pago</h1>
 
@@ -129,32 +186,37 @@ const ContMisPagos = () => {
                 className={classes.inputs}
                 label="Vencimiento"
                 variant="outlined"
+                type="date"
+                defaultValue="2021-01-01"
+                required
               ></TextField>
+
               <TextField
                 name="numeroTarjeta"
                 className={classes.inputs}
                 label="Numero Tarjeta"
                 variant="outlined"
+                required
               ></TextField>
+
               <TextField
                 name="codigoTarjeta"
                 className={classes.inputs}
                 label="Codigo Tarjeta"
                 variant="outlined"
+                required
               ></TextField>
+
               <TextField
                 name="montoPago"
                 className={classes.inputs}
                 label="Monto a Pagar"
                 variant="outlined"
-                value={1}
+                value={montoTotal}
                 disabled
               ></TextField>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-              >
+
+              <Button type="submit" variant="contained" color="primary">
                 Pagar
               </Button>
             </div>

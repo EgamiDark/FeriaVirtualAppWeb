@@ -56,3 +56,26 @@ export const getOfertasProductos = async () => {
     .catch((err) => err);
   return await res;
 };
+
+export const getEstadosVenta = async () => {
+  let res = await fetch(API + "/api/ventaLocal/todos/estadosVenta", {
+    method: "GET",
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return await res;
+};
+
+export const cancelarVL = async (data) => {
+  let res = await fetch(API + "/api/ventaLocal/ofertaVL/cancelar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  })
+    .then((r) => r.json())
+    .catch((err) => err);
+  return await res;
+};
