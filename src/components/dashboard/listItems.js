@@ -98,7 +98,7 @@ const MainListItems = ()=>{
     </ListItemButton>:<></>}
 
     { rol===5 ?
-    <ListItemButton onClick={()=>history.push("/misPagos")}>
+    <ListItemButton onClick={()=>history.push("/misPagosVL")}>
       <ListItemIcon>
         <AttachMoney />
       </ListItemIcon>

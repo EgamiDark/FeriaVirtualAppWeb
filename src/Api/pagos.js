@@ -10,6 +10,16 @@ export const getMispagos = async (idUsuario) => {
   return await res;
 };
 
+export const getMisPagosVL = async (idUsuario) => {
+  let res = await fetch(API +"/api/pagos/obtener/pago/ventalocal/" + idUsuario, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+
 export const cambiaEstadoPago = async (idPago)=>{
   let res = await fetch(API + "/api/pagos/cambiaEstPago", {
     method: "POST",

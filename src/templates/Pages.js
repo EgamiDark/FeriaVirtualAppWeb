@@ -20,6 +20,7 @@ import ModOferS from "../components/crudSubasta/modificarOferta"
 import DashBoard from "../components/dashboard/Dashboard";
 import OfertasVL from "../components/contenido/ContProductos";
 import MisVL from "../components/contenido/ContMisPedidosVL";
+import MisPagosVentaLocal from "../components/contenido/ContMisPagosVL";
 
 export const Home = () => {
   return <DashBoard contenido={<ContHome/>}/>
@@ -99,4 +100,8 @@ export const OfertasVentaLocal = () =>{
 
 export const MisVentasLocales = () =>{
   return <DashBoard contenido={<MisVL/>}/>
+}
+
+export const MisPagosVL = () =>{
+  return <DashBoard contenido={<MisPagosVentaLocal/>}/>
 }

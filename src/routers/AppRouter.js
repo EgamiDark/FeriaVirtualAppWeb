@@ -22,7 +22,8 @@ import {
   ModificarOfertaP,
   OfertarProducto,
   OfertasVentaLocal,
-  MisVentasLocales
+  MisVentasLocales,
+  MisPagosVL
 } from "../templates/Pages";
 import useAuth from '../auth/useAuth'
 import { useState } from "react";
@@ -60,6 +61,7 @@ const AppRouter = () => {
         <PrivateRoute exact path="/modificarPedido" component={ModificarPedido} />
         <PrivateRoute exact path="/añadirPedido" component={AñadirPedido} />
         <PrivateRoute exact path="/misPagos" component={MisPagos} />
+        <PrivateRoute exact path="/misPagosVL" component={MisPagosVL} />
         <PrivateRoute exact path="/ofertasVL" component={OfertasVentaLocal} />
         <PrivateRoute exact path="/misVL" component={MisVentasLocales} />
         <PrivateRoute exact path="/perfil" component={Perfil} />
