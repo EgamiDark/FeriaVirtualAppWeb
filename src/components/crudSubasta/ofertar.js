@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -8,11 +8,10 @@ import withReactContent from "sweetalert2-react-content";
 import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
-import useAuth from '../../auth/useAuth';
+import useAuth from "../../auth/useAuth";
 
 import { postOfertar } from "../../Api/subasta";
 import { getTransportesUsuario } from "../../Api/transporte";
-
 
 const useStyles = makeStyles(() => ({
   inputs: {
@@ -37,49 +36,57 @@ const Ofertar = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let hoy = new Date()
-  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD")
-  const [fecha, setFecha] = useState()
-  const [vehiculo, setVehiculo] = useState([])
-  const [selectV, setSelectV] = useState([])
-  const [reset, setReset] = useState(0)
+  let hoy = new Date();
+  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
+  const [fecha, setFecha] = useState();
+  const [vehiculo, setVehiculo] = useState([]);
+  const [selectV, setSelectV] = useState([]);
+  const [reset, setReset] = useState(0);
 
   const classes = useStyles();
 
-  const cargarVehiculo = () => {
-    let f = []
-    for (let i = 0; i < vehiculo.rows?.length; i++) {
-      f.push(<MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>)
+  const fechaActual = (fechaEntrega) => {
+    console.log(fechaHoy)
+    console.log(fechaEntrega)
+
+    if (fechaEntrega < fechaHoy) {
+      setFecha(moment(fechaHoy).format("YYYY-MM-DD"));
+    } else {
+      setFecha(moment(fechaEntrega).format("YYYY-MM-DD"));
     }
-    setSelectV(f)
-  }
+  };
+
+  const cargarVehiculo = () => {
+    let f = [];
+    for (let i = 0; i < vehiculo.rows?.length; i++) {
+      f.push(
+        <MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>
+      );
+    }
+    setSelectV(f);
+  };
 
   useEffect(async () => {
-    setVehiculo(await getTransportesUsuario(idUsuario))
-    setFecha(moment(fechaHoy).format("DD-MM-YYYY"))
-    setReset(1)
-  }, [])
+    setVehiculo(await getTransportesUsuario(idUsuario));
+    setFecha(moment(fechaHoy).format("YYYY-MM-DD"));
+    setReset(1);
+  }, []);
 
   useEffect(() => {
-    cargarVehiculo()
-  }, [reset])
+    cargarVehiculo();
+  }, [reset]);
 
   const guardarOferta = async (data) => {
-
     try {
       data.idSubasta = history.location.state?.idSubasta;
       data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data))
+      console.log(JSON.stringify(data));
       const res = await postOfertar(JSON.stringify(data));
 
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
-          html: (
-            <i>
-              Guardado Correctamente!
-            </i>
-          ),
+          html: <i>Guardado Correctamente!</i>,
           icon: "success",
         });
         history.push("/misOfertas");
@@ -136,7 +143,9 @@ const Ofertar = () => {
           })}
           requerid
           error={!!errors.cantidadTransporte}
-          helperText={errors.cantidadTransporte ? errors.cantidadTransporte.message : ""}
+          helperText={
+            errors.cantidadTransporte ? errors.cantidadTransporte.message : ""
+          }
           className={classes.inputs}
           label="Cantidad a Transportar*"
           variant="outlined"
@@ -146,9 +155,9 @@ const Ofertar = () => {
           name="fechaEntrega"
           className={classes.inputs}
           label="Fecha Entrega(Aprox.)"
-          defaultValue={fechaHoy}
+          value={fecha}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("DD-MM-YYYY"))
+            fechaActual(item.target.value);
           }}
           variant="outlined"
           type="date"

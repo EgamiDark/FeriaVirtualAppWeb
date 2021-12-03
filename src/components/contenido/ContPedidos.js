@@ -1,6 +1,6 @@
 import Tabla from "../Tabla";
 import IconButton from "@mui/material/IconButton";
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getPedidosD } from "../../Api/pedido";
@@ -50,10 +50,22 @@ const ContPedidos = () => {
           break;
         }
       }
-      f.push(<div>
-        <IconButton sx={{ color: "green" }} aria-label="add" onClick={() => history.push({ pathname: "/ofertarProducto" ,state:{idPedido:pedido?.rows[i][0]}})}>
-          <ArrowUpwardIcon />
-        </IconButton></div>)
+      f.push(
+        <div>
+          <IconButton
+            sx={{ color: "green" }}
+            aria-label="add"
+            onClick={() =>
+              history.push({
+                pathname: "/ofertarProducto",
+                state: { idPedido: pedido?.rows[i][0] },
+              })
+            }
+          >
+            <ArrowUpwardIcon />
+          </IconButton>
+        </div>
+      );
       r.push(f);
     }
     setRows(r);

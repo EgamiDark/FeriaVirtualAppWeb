@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Tooltip from "@mui/material/Tooltip";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -75,8 +76,9 @@ const ContMisOfertas = () => {
       }
     });
   };
-  
+
   const iteRows = () => {
+    console.log(estOferta);
     let r = [];
     for (let i = 0; i < oferta.rows?.length; i++) {
       let f = [];
@@ -85,38 +87,56 @@ const ContMisOfertas = () => {
       f.push(oferta?.rows[i][2]);
       f.push(oferta?.rows[i][3]);
       f.push(oferta?.rows[i][4]);
+
       for (let e = 0; e < estOferta.rows?.length; e++) {
         if (estOferta.rows[e][0] == oferta?.rows[i][5]) {
           f.push(estOferta.rows[e][1]);
           break;
         }
       }
-      //f.push(oferta?.rows[i][6])id oferta
-      f.push(
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            sx={{ color: "blue" }}
-            aria-label="update"
-            onClick={() =>
-              history.push({
-                pathname: "/modificarOfertaS",
-                state: { idOferta: oferta?.rows[i][6] },
-              })
-            }
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            sx={{ color: "red" }}
-            aria-label="delete"
-            onClick={() => {
-              cancelarOferta(oferta?.rows[i][6]);
-            }}
-          >
-            <CancelIcon />
-          </IconButton>
-        </div>
-      );
+
+      if (oferta?.rows[i][5] == 1) {
+        f.push(
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <IconButton
+              sx={{ color: "blue" }}
+              aria-label="update"
+              onClick={() =>
+                history.push({
+                  pathname: "/modificarOfertaS",
+                  state: { idOferta: oferta?.rows[i][6] },
+                })
+              }
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              sx={{ color: "red" }}
+              aria-label="delete"
+              onClick={() => {
+                cancelarOferta(oferta?.rows[i][6]);
+              }}
+            >
+              <CancelIcon />
+            </IconButton>
+          </div>
+        )
+      } else {
+        f.push(
+          <div>
+            <Tooltip title="No se puede editar">
+              <IconButton sx={{ color: "blue", opacity: "60%" }}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="No se puede cancelar">
+              <IconButton sx={{ color: "red", opacity: "60%" }}>
+                <CancelIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        );
+      }
       r.push(f);
     }
     setRows(r);
@@ -125,6 +145,7 @@ const ContMisOfertas = () => {
   useEffect(async () => {
     setOferta(await getOfertas(idUsuario));
     setEstOferta(await getEstOfertaSub());
+
     setReset(1);
   }, [reload]);
   useEffect(() => {
