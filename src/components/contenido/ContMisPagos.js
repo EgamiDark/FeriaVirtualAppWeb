@@ -114,11 +114,6 @@ const ContMisPagos = () => {
   "Acción",
   ];
 
-  const [estadosPago, setEstadosPagos] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [misPagos, setMisPagos] = useState([]);
-  const [reset, setReset] = useState(0);
-
   const iteRows = async () => {
     let r = [];
 

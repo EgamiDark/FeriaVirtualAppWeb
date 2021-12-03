@@ -132,7 +132,7 @@ const Dashboard = (props) => {
             >
               <img className={classes.logo} src={logo} />
             </Typography>
-            <h3>Bienvenido {nombre}</h3>
+            <h3>Bienvenid@ {nombre}</h3>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

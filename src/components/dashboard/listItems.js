@@ -86,7 +86,7 @@ const MainListItems = ()=>{
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
-      <ListItemText primary="Mis Ofertas" />
+      <ListItemText primary="Ofertas Productos" />
     </ListItemButton>:<></>}
 
     { rol===5 ?
