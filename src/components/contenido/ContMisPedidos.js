@@ -86,6 +86,7 @@ const ContMisPedidos = () => {
     boxShadow: 24,
     p: 4,
     borderRadius: 2,
+    textAlign:"center",
   };
 
   const MySwal = withReactContent(Swal);
@@ -315,6 +316,7 @@ const ContMisPedidos = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleModal}>
+        <h1>Ofertas</h1>
           {tabla}
         </Box>
       </Modal>
