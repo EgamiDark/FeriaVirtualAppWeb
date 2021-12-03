@@ -39,9 +39,10 @@ const Añadir = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let hoy = new Date();
+  let hoy = new Date() ;
+  hoy.setDate(hoy.getDate() + 1);
   let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
-  const [fecha, setFecha] = useState();
+  const [fecha, setFecha] = useState(fechaHoy);
   const [producto, setProducto] = useState([]);
   const [selectP, setSelectP] = useState([]);
   const [reset, setReset] = useState(0);
@@ -62,9 +63,17 @@ const Añadir = () => {
     setSelectP(f);
   };
 
+  const setearFecha = (newFecha)=>{
+    if(Date.parse(newFecha)>=Date.parse(fechaHoy)){
+      setFecha(moment(newFecha).format("YYYY-MM-DD"));
+    }
+    else{
+      setFecha(moment(fechaHoy).format("YYYY-MM-DD"));
+    }
+  }
+
   useEffect(async () => {
     setProducto(await getProductos());
-    setFecha(moment(fechaHoy).format("DD-MM-YYYY"));
     setReset(1);
   }, []);
 
@@ -77,7 +86,7 @@ const Añadir = () => {
       data.idSubasta = history.location.state?.idSubasta;
       let f = new Date();
       data.fechaSolicitud = moment(f.toISOString()).format("DD-MM-YYYY");
-      data.fechaTermino = fecha;
+      data.fechaTermino = moment(fecha).format("DD-MM-YYYY");
       data.idEstadoPedido = 1;
       data.idUsuario = idUsuario;
       const res = await postIngresarPedido(JSON.stringify(data));
@@ -116,9 +125,10 @@ const Añadir = () => {
           name="fechaTermino"
           className={classes.inputs}
           label="Fecha de termino para ofertar"
-          defaultValue={fechaHoy}
+          
+          value={fecha}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("DD-MM-YYYY"));
+            setearFecha(item.target.value);
           }}
           variant="outlined"
           type="date"

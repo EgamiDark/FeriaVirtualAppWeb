@@ -182,7 +182,7 @@ const Dashboard = (props) => {
               {/* FOOTER */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <h1>FOOTER</h1>
+                  <h1>@FeriaVirtualApp - 2021</h1>
                 </Paper>
 
               </Grid>

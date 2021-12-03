@@ -4,7 +4,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getPedidosD } from "../../Api/pedido";
-import { getEstPedido } from "../../Api/datosFk";
+import { getEstPedido, getProductos } from "../../Api/datosFk";
 
 import moment from "moment";
 
@@ -23,6 +23,7 @@ const ContPedidos = () => {
   ];
   const [rows, setRows] = useState([]);
   const [pedido, setPedido] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [reset, setReset] = useState(0);
   const [estPedido, setEstPedido] = useState([]);
 
@@ -32,7 +33,12 @@ const ContPedidos = () => {
     for (let i = 0; i < pedido.rows?.length; i++) {
       let f = [];
       f.push(pedido?.rows[i][0]); //ID
-      f.push("PALTA");
+      for (let pr = 0; pr < productos.rows?.length; pr++) {
+        if (productos?.rows[pr][0] == pedido?.rows[i][8]) {
+          f.push(productos?.rows[pr][1]);
+          break;
+        }
+      }
 
       let fechaSolicitud = moment(pedido?.rows[i][1]).format("DD/MM/YYYY");
       f.push(fechaSolicitud); //FECHA SOL.
@@ -50,28 +56,17 @@ const ContPedidos = () => {
           break;
         }
       }
-      f.push(
-        <div>
-          <IconButton
-            sx={{ color: "green" }}
-            aria-label="add"
-            onClick={() =>
-              history.push({
-                pathname: "/ofertarProducto",
-                state: { idPedido: pedido?.rows[i][0] },
-              })
-            }
-          >
-            <ArrowUpwardIcon />
-          </IconButton>
-        </div>
-      );
+      f.push(<div>
+        <IconButton sx={{ color: "green" }} aria-label="add" onClick={() => history.push({ pathname: "/ofertarProducto", state: { idPedido: pedido?.rows[i][0], kgUnidad: pedido?.rows[i][4] } })}>
+          <ArrowUpwardIcon />
+        </IconButton></div>)
       r.push(f);
     }
     setRows(r);
   };
 
   useEffect(async () => {
+    setProductos(await getProductos());
     setPedido(await getPedidosD());
     setEstPedido(await getEstPedido());
     setReset(1);

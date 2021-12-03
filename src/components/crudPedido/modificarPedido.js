@@ -40,6 +40,10 @@ const ModificarPedido = () => {
   let auth = useAuth();
   let idUsu = auth?.user[0];
 
+  let hoy = new Date() ;
+  hoy.setDate(hoy.getDate() + 1);
+  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
+
   const [pedido, setPedido] = useState(0);
 
   const [idPedido, setIdPedido] = useState(0);
@@ -54,6 +58,15 @@ const ModificarPedido = () => {
   const [reset, setReset] = useState(0);
 
   const classes = useStyles();
+
+  const setearFecha = (newFecha)=>{
+    if(Date.parse(newFecha)>=Date.parse(fechaHoy)){
+      setFechaTermino(moment(newFecha).format("YYYY-MM-DD"));
+    }
+    else{
+      setFechaTermino(moment(fechaHoy).format("YYYY-MM-DD"));
+    }
+  }
 
   const iteRows = () => {
     for (let i = 0; i < pedido.rows?.length; i++) {
@@ -147,7 +160,7 @@ const ModificarPedido = () => {
           label="Fecha Termino"
           value={fechaTermino}
           onChange={(item) => {
-            setFechaTermino(moment(item.target.value).format("YYYY-MM-DD"));
+            setearFecha(item.target.value)
           }}
           variant="outlined"
           type="date"

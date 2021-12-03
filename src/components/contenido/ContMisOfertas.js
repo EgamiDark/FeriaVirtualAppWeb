@@ -22,7 +22,6 @@ const ContMisOfertas = () => {
     "Id Subasta",
     "Fecha Entrega",
     "Precio Oferta",
-    "Cantidad Transporte",
     "Transporte",
     "Estado",
     "Acción",
@@ -78,7 +77,6 @@ const ContMisOfertas = () => {
   };
 
   const iteRows = () => {
-    console.log(estOferta);
     let r = [];
     for (let i = 0; i < oferta.rows?.length; i++) {
       let f = [];
@@ -86,18 +84,17 @@ const ContMisOfertas = () => {
       f.push(moment(oferta?.rows[i][1]).format("DD/MM/YYYY"));
       f.push(oferta?.rows[i][2]);
       f.push(oferta?.rows[i][3]);
-      f.push(oferta?.rows[i][4]);
-
       for (let e = 0; e < estOferta.rows?.length; e++) {
-        if (estOferta.rows[e][0] == oferta?.rows[i][5]) {
+        if (estOferta.rows[e][0] == oferta?.rows[i][4]) {
           f.push(estOferta.rows[e][1]);
           break;
         }
       }
 
-      if (oferta?.rows[i][5] == 1) {
+      if (oferta?.rows[i][4] == 1) {
         f.push(
           <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Tooltip title="Modificar">
             <IconButton
               sx={{ color: "blue" }}
               aria-label="update"
@@ -110,6 +107,8 @@ const ContMisOfertas = () => {
             >
               <EditIcon />
             </IconButton>
+            </Tooltip>
+            <Tooltip title="Cancelar">
             <IconButton
               sx={{ color: "red" }}
               aria-label="delete"
@@ -119,6 +118,7 @@ const ContMisOfertas = () => {
             >
               <CancelIcon />
             </IconButton>
+            </Tooltip>
           </div>
         )
       } else {

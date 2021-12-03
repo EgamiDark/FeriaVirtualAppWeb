@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 // Material UI
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -40,32 +41,36 @@ const useStyles = makeStyles(() => ({
 
 const ContMisPedidos = () => {
   const [open, setOpen] = useState(false);
-  const [ofertasProd, setOfertasProd] = useState([]);
-  const [rowsOfertas, setRowsOfertas] = useState([]);
+  const [tabla, setTabla] = useState();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const tablaOfertas = (row) => {
+    return (
+      <div>
+        <Tabla nomRows={nomRowsOfertasP} rows={row} />
+      </div>
+    )
+  }
   const ofertas = async (idPedido) => {
-    setOfertasProd(await getOferPByPedido(idPedido));
-    console.log(ofertasProd);
-
+    let ofer = await getOferPByPedido(idPedido);
     let r = [];
 
-    for (let i = 0; i < ofertasProd.rows?.length; i++) {
+    for (let i = 0; i < ofer.rows?.length; i++) {
       let f = [];
 
-      f.push(ofertasProd?.rows[i][0]);
-      f.push(ofertasProd?.rows[i][1]);
-      f.push(ofertasProd?.rows[i][2]);
-      f.push(ofertasProd?.rows[i][3]);
-      f.push(moment(ofertasProd?.rows[i][4]).format("DD/MM/YYYY"));
+      f.push(ofer?.rows[i][0]);
+      f.push(ofer?.rows[i][1]);
+      f.push(ofer?.rows[i][2]);
+      f.push(ofer?.rows[i][3]);
+      f.push(moment(ofer?.rows[i][4]).format("DD/MM/YYYY"));
 
       r.push(f);
     }
+    setTabla(tablaOfertas(r));
+    handleOpen();
 
-    setRowsOfertas(r);
-    setReset(0);
   };
 
   const classes = useStyles();
@@ -90,7 +95,7 @@ const ContMisPedidos = () => {
   const history = useHistory();
   const [productos, setProductos] = useState([]);
   const [estadosPedido, setEstadosPedido] = useState([]);
-  let nomRows = [
+  let nomRows = ["Id Pedido",
     "Producto",
     "Fecha Solicitud",
     "Fecha Termino",
@@ -163,7 +168,7 @@ const ContMisPedidos = () => {
 
     for (let i = 0; i < misPedidos.rows?.length; i++) {
       let f = [];
-
+      f.push(misPedidos?.rows[i][0]);
       for (let p = 0; p < productos.rows?.length; p++) {
         if (misPedidos?.rows[i][8] == productos?.rows[p][0]) {
           f.push(productos?.rows[p][1]);
@@ -178,7 +183,7 @@ const ContMisPedidos = () => {
       f.push(fechaTermino);
       f.push(misPedidos?.rows[i][3]);
       f.push(misPedidos?.rows[i][4]);
-      f.push(misPedidos?.rows[i][5]);
+      f.push("$" + misPedidos?.rows[i][5]);
 
       for (let e = 0; e < estadosPedido.rows?.length; e++) {
         if (misPedidos?.rows[i][6] == estadosPedido?.rows[e][0]) {
@@ -187,10 +192,21 @@ const ContMisPedidos = () => {
         }
       }
 
+      let ofer = await getOferPByPedido(misPedidos?.rows[i][0]);
+      let cantOfer = ofer.rows?.length;
       switch (misPedidos?.rows[i][6]) {
         case 1:
           f.push(
             <div>
+              {cantOfer ?
+                <Tooltip title="No modificable">
+                  <IconButton
+                    sx={{ color: "fff", opacity: "60%" }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                : <Tooltip title="Modificar">
               <IconButton
                 sx={{ color: "green" }}
                 aria-label="update"
@@ -203,14 +219,15 @@ const ContMisPedidos = () => {
               >
                 <EditIcon />
               </IconButton>
-
+              </Tooltip>}
+              <Tooltip title="Ofertas">
               <IconButton
                 sx={{ color: "blue" }}
-                onClick={(ofertas(misPedidos?.rows[i][0]), handleOpen)}
-              >
+                onClick={() => { ofertas(misPedidos?.rows[i][0]) }}>
                 <FormatListBulletedIcon />
               </IconButton>
-
+              </Tooltip>
+              <Tooltip title="Cancelar">
               <IconButton
                 sx={{ color: "red" }}
                 aria-label="act/desac"
@@ -220,22 +237,44 @@ const ContMisPedidos = () => {
               >
                 <CancelIcon />
               </IconButton>
+              </Tooltip>
             </div>
           );
           break;
         case 2:
-          f.push(
-            <p style={{ color: "green", fontWeight: "bold" }}>
-              FINALIZADO
-            </p>
-          );
-          break;
         case 3:
+        case 4:
+        case 5:
           f.push(
-            <p style={{ color: "red", fontWeight: "bold" }}>NO PERMITIDO</p>
+            <div>
+              <Tooltip title="No modificable">
+                <IconButton
+                  sx={{ color: "fff", opacity: "60%" }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Ofertas">
+                <IconButton
+                  sx={{ color: "blue" }}
+                  onClick={() => { ofertas(misPedidos?.rows[i][0]) }}>
+                  <FormatListBulletedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="No cancelable">
+                <IconButton
+                  sx={{ color: "fff", opacity: "60%" }}
+                >
+                  <CancelIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
           );
           break;
         default:
+          f.push(
+            <p style={{ color: "red", fontWeight: "bold" }}>ERROR</p>
+          );
           break;
       }
 
@@ -276,7 +315,7 @@ const ContMisPedidos = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleModal}>
-          <Tabla nomRows={nomRowsOfertasP} rows={rowsOfertas} />
+          {tabla}
         </Box>
       </Modal>
     </div>

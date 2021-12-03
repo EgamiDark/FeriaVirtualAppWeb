@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Material UI
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from "@mui/material/IconButton";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import Modal from "@mui/material/Modal";
@@ -102,12 +103,21 @@ const ContMisPagos = () => {
   let idUsuario = auth?.user[0];
 
   let nomRows = [
-    "Id Pedido",
-    "Monto Total",
-    "Fecha de Pago",
-    "Estado",
-    "Pagar",
+  "Id Pago",
+  "Id Pedido",
+  "Fecha de Pago",
+  "Cantidad Productos",
+  "Monto Productos",
+  "Monto Transporte",
+  "Monto Total",
+  "Estado",
+  "Acción",
   ];
+
+  const [estadosPago, setEstadosPagos] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [misPagos, setMisPagos] = useState([]);
+  const [reset, setReset] = useState(0);
 
   const iteRows = async () => {
     let r = [];
@@ -117,37 +127,42 @@ const ContMisPagos = () => {
 
       // Id
       f.push(misPagos?.rows[i][0]);
-
-      // Monto Total
-      f.push(misPagos?.rows[i][3]);
-
-      let fechaPago = moment(misPagos?.rows[i][2]).format(
+      f.push(misPagos?.rows[i][6]);
+      let fechaPago = moment(misPagos?.rows[i][4]).format(
         "DD/MM/YYYY hh:mm:ss"
       );
       f.push(fechaPago);
-
+      f.push(misPagos?.rows[i][9]);
+      f.push(misPagos?.rows[i][1]);
+      f.push(misPagos?.rows[i][2]);
+      f.push(misPagos?.rows[i][3]);
       for (let e = 0; e < estadosPago.rows?.length; e++) {
         if (misPagos?.rows[i][5] == estadosPago?.rows[e][0]) {
           f.push(estadosPago?.rows[e][1]);
-          if (estadosPago?.rows[e][0] == 1) {
-            f.push(
-              <div>
-                <IconButton
-                  sx={{ color: "blue" }}
-                  onClick={() => {
-                    handleOpen(misPagos?.rows[i]);
-                  }}
-                >
-                  <MonetizationOnIcon />
-                </IconButton>
-              </div>
-            );
-            break;
-          } else {
-            f.push(<strong style={{ color: "green" }}>Terminado</strong>);
-            break;
-          }
+          break;
         }
+      }if (misPagos?.rows[i][1]==0 || misPagos?.rows[i][2]==0) {
+        f.push(
+          <div>
+            <Tooltip title="Aun no puede pagar">
+              <IconButton sx={{ color: "fff", opacity:"60%" }} >
+                <MonetizationOnIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        );
+        
+      }
+      else {
+        f.push(
+          <div>
+            <Tooltip title="Pagar">
+              <IconButton sx={{ color: "blue" }} onClick={handleOpen}>
+                <MonetizationOnIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        );
       }
 
       r.push(f);

@@ -53,6 +53,7 @@ const Ofertar = () => {
 
     try {
       data.idPedido = history.location.state?.idPedido;
+      data.kgUnidad = history.location.state?.kgUnidad;
       data.fechaCosecha = fechaCosecha;
       data.fechaCaducidad = fechaCaducidad;
       data.idUsuario = idUsuario
@@ -102,6 +103,22 @@ const Ofertar = () => {
           disabled
         ></TextField>
         <TextField
+          name="producto"
+          className={classes.inputs}
+          label="Producto"
+          variant="outlined"
+          value={history.location.state?.producto}
+          disabled
+        ></TextField>
+        <TextField
+          name="kgUnidad"
+          className={classes.inputs}
+          label="KG X Unidad"
+          variant="outlined"
+          value={history.location.state?.kgUnidad}
+          disabled
+        ></TextField>
+        <TextField
           name="precioUnidad"
           {...register("precioUnidad", {
             required: "Este campo es requerido",
@@ -111,19 +128,6 @@ const Ofertar = () => {
           helperText={errors.precioUnidad ? errors.precioUnidad.message : ""}
           className={classes.inputs}
           label="Precio Unidad*"
-          variant="outlined"
-          type="number"
-        ></TextField>
-        <TextField
-          name="kgUnidad"
-          {...register("kgUnidad", {
-            required: "Este campo es requerido",
-            validate: "Campo no valido",
-          })}
-          error={!!errors.kgUnidad}
-          helperText={errors.kgUnidad ? errors.kgUnidad.message : ""}
-          className={classes.inputs}
-          label="KG X Unidad*"
           variant="outlined"
           type="number"
         ></TextField>
