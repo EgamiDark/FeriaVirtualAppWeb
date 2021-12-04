@@ -62,9 +62,9 @@ const ContMisPedidos = () => {
 
       f.push(ofer?.rows[i][0]);
       f.push(ofer?.rows[i][1]);
-      f.push(ofer?.rows[i][2]);
       f.push(ofer?.rows[i][3]);
       f.push(moment(ofer?.rows[i][4]).format("DD/MM/YYYY"));
+      f.push(moment(ofer?.rows[i][5]).format("DD/MM/YYYY"));
 
       r.push(f);
     }

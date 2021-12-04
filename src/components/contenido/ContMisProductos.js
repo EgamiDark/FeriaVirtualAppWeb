@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Tooltip from "@mui/material/Tooltip";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -112,31 +113,58 @@ const ContMisProductos = () => {
           break;
         }
       }
-      f.push(
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            sx={{ color: "blue" }}
-            aria-label="update"
-            onClick={() =>
-              history.push({
-                pathname: "/modificarOfertaP",
-                state: { idOferta: misProductos?.rows[i][0] },
-              })
-            }
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            sx={{ color: "red" }}
-            aria-label="delete"
-            onClick={() => {
-              cancelarOferta(misProductos?.rows[i][0]);
-            }}
-          >
-            <CancelIcon />
-          </IconButton>
-        </div>
-      );
+
+      switch (misProductos?.rows[i][7]) {
+        case 1:
+        case 4:
+          f.push(
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <IconButton
+                sx={{ color: "blue" }}
+                aria-label="update"
+                onClick={() =>
+                  history.push({
+                    pathname: "/modificarOfertaP",
+                    state: { idOferta: misProductos?.rows[i][0] },
+                  })
+                }
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                sx={{ color: "red" }}
+                aria-label="delete"
+                onClick={() => {
+                  cancelarOferta(misProductos?.rows[i][0]);
+                }}
+              >
+                <CancelIcon />
+              </IconButton>
+            </div>
+          );
+          break;
+        case 2:
+        case 3:
+        case 5:
+          f.push(
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Tooltip title="No se puede editar">
+                <IconButton sx={{ color: "blue", opacity: "60%" }}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="No se puede cancelar">
+                <IconButton sx={{ color: "red", opacity: "60%" }}>
+                  <CancelIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+          break;
+        default:
+          break;
+      }
+
       r.push(f);
     }
     setRows(r);

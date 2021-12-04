@@ -3,9 +3,9 @@ import IconButton from "@mui/material/IconButton";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { getPedidosD,getOferPByPedido } from "../../Api/pedido";
+import { getPedidosD, getOferPByPedido } from "../../Api/pedido";
 import { getEstPedido, getProductos } from "../../Api/datosFk";
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "@mui/material/Tooltip";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -35,8 +35,8 @@ const ContPedidos = () => {
       <div>
         <Tabla nomRows={nomRowsOfertasP} rows={row} />
       </div>
-    )
-  }
+    );
+  };
   const ofertas = async (idPedido) => {
     let ofer = await getOferPByPedido(idPedido);
     let r = [];
@@ -54,7 +54,6 @@ const ContPedidos = () => {
     }
     setTabla(tablaOfertas(r));
     handleOpen();
-
   };
   const classes = useStyles();
 
@@ -69,7 +68,7 @@ const ContPedidos = () => {
     boxShadow: 24,
     p: 4,
     borderRadius: 2,
-    textAlign:"center",
+    textAlign: "center",
   };
   const history = useHistory();
   let nomRows = [
@@ -83,7 +82,7 @@ const ContPedidos = () => {
     "Estado",
     "Acción",
   ];
-  
+
   let nomRowsOfertasP = [
     "Id",
     "Precio Unidad",
@@ -129,21 +128,41 @@ const ContPedidos = () => {
           break;
         }
       }
-      f.push(<div>
-        <Tooltip title="Ofertar">
-        <IconButton sx={{ color: "green" }} aria-label="add" onClick={() => history.push({ pathname: "/ofertarProducto", state: { idPedido: pedido?.rows[i][0], kgUnidad: pedido?.rows[i][4], producto:prod } })}>
-          <ArrowUpwardIcon />
-        </IconButton>
-        </Tooltip>
-        <Tooltip title="Ofertas">
-                <IconButton
-                  sx={{ color: "blue" }}
-                  onClick={() => { ofertas(pedido?.rows[i][0]) }}>
-                  <FormatListBulletedIcon />
-                </IconButton>
-              </Tooltip>
-        </div>)
-        
+      f.push(
+        <div>
+          <Tooltip title="Ofertar">
+            <IconButton
+              sx={{ color: "green" }}
+              aria-label="add"
+              onClick={() =>
+                history.push({
+                  pathname: "/ofertarProducto",
+                  state: {
+                    idPedido: pedido?.rows[i][0],
+                    kgUnidad: pedido?.rows[i][4],
+                    producto: prod,
+                    precioMax: pedido?.rows[i][5],
+                    cantMax: pedido?.rows[i][3],
+                  },
+                })
+              }
+            >
+              <ArrowUpwardIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Ofertas">
+            <IconButton
+              sx={{ color: "blue" }}
+              onClick={() => {
+                ofertas(pedido?.rows[i][0]);
+              }}
+            >
+              <FormatListBulletedIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      );
+
       r.push(f);
     }
     setRows(r);

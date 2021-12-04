@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -8,7 +8,7 @@ import withReactContent from "sweetalert2-react-content";
 import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
-import useAuth from '../../auth/useAuth';
+import useAuth from "../../auth/useAuth";
 
 import { postOfertar } from "../../Api/pedido";
 
@@ -35,38 +35,46 @@ const Ofertar = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let hoy = new Date()
-  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD")
-  const [fechaCosecha, setFechaCosecha] = useState()
-  const [fechaCaducidad, setFechaCaducidad] = useState()
-  const [reset, setReset] = useState(0)
+  let hoy = new Date();
+  let fechMinCadu = new Date();
+  fechMinCadu.setDate(hoy.getDate() + 30);
+  let defaultMinCadu = moment(fechMinCadu.toISOString()).format("YYYY-MM-DD");
+  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
+  const [fechaCosecha, setFechaCosecha] = useState(fechaHoy);
+  const [fechaCaducidad, setFechaCaducidad] = useState(defaultMinCadu);
+  const [reset, setReset] = useState(0);
 
   const classes = useStyles();
 
+  const fechaMinCaducidad = (fechaCaduci) => {
+    console.log("hola desde la funcion fechaMinCaducidad")
+
+    if (fechaCaduci < defaultMinCadu) {
+      console.log("hola desde el if")
+      setFechaCaducidad(moment(defaultMinCadu).format("YYYY-MM-DD"));
+    } else {
+      console.log("hola desde el else")
+      setFechaCaducidad(moment(fechaCaduci).format("YYYY-MM-DD"));
+    }
+  };
+
   useEffect(() => {
-    setFechaCosecha(moment(fechaHoy).format("DD-MM-YYYY"))
-    setFechaCaducidad(moment(fechaHoy).format("DD-MM-YYYY"))
-    setReset(1)
-  }, [reset])
+    setReset(1);
+  }, [reset]);
 
   const guardarOferta = async (data) => {
-
     try {
       data.idPedido = history.location.state?.idPedido;
       data.kgUnidad = history.location.state?.kgUnidad;
       data.fechaCosecha = fechaCosecha;
       data.fechaCaducidad = fechaCaducidad;
-      data.idUsuario = idUsuario
+      data.idUsuario = idUsuario;
       const res = await postOfertar(JSON.stringify(data));
 
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
-          html: (
-            <i>
-              Guardado Correctamente!
-            </i>
-          ),
+          html: <i>Guardado Correctamente!</i>,
           icon: "success",
         });
         history.push("/misProductos");
@@ -123,11 +131,18 @@ const Ofertar = () => {
           {...register("precioUnidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
+            max: {
+              value: history.location.state?.precioMax,
+              message:
+                "El precio debe ser menor o igual a" +
+                " " +
+                history.location.state?.precioMax,
+            },
           })}
           error={!!errors.precioUnidad}
           helperText={errors.precioUnidad ? errors.precioUnidad.message : ""}
           className={classes.inputs}
-          label="Precio Unidad*"
+          label={"Precio Unidad* " + "(Maximo " + history.location.state?.precioMax + ")" }
           variant="outlined"
           type="number"
         ></TextField>
@@ -136,12 +151,19 @@ const Ofertar = () => {
           {...register("cantidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
+            max: {
+              value: history.location.state?.cantMax,
+              message:
+                "El precio debe ser menor o igual a" +
+                " " +
+                history.location.state?.cantMax,
+            },
           })}
           requerid
           error={!!errors.cantidad}
           helperText={errors.cantidad ? errors.cantidad.message : ""}
           className={classes.inputs}
-          label="Cantidad a Ofertar*"
+          label={"Cantidad a Ofertar* " + "(Maximo " + history.location.state?.cantMax + ")" }
           variant="outlined"
           type="number"
         ></TextField>
@@ -157,7 +179,7 @@ const Ofertar = () => {
           label="Fecha Cosecha"
           defaultValue={fechaHoy}
           onChange={(item) => {
-            setFechaCosecha(moment(item.target.value).format("DD-MM-YYYY"))
+            setFechaCosecha(moment(item.target.value).format("DD-MM-YYYY"));
           }}
           variant="outlined"
           type="date"
@@ -169,12 +191,15 @@ const Ofertar = () => {
             validate: "Campo no valido",
           })}
           error={!!errors.fechaCaducidad}
-          helperText={errors.fechaCaducidad ? errors.fechaCaducidad.message : ""}
+          helperText={
+            errors.fechaCaducidad ? errors.fechaCaducidad.message : ""
+          }
           className={classes.inputs}
           label="Fecha Caducidad"
-          defaultValue={fechaHoy}
+          value={fechaCaducidad}
           onChange={(item) => {
-            setFechaCaducidad(moment(item.target.value).format("DD-MM-YYYY"))
+            console.log(item.target.value)
+            fechaMinCaducidad(item.target.value);
           }}
           variant="outlined"
           type="date"
