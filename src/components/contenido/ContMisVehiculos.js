@@ -16,6 +16,8 @@ import useAuth from "../../auth/useAuth";
 import { getTransportesUsuario, actividadVehiculo } from "../../Api/transporte";
 import { getTipoRefrig, getTipoTrans } from "../../Api/datosFk";
 
+import Tooltip from "@mui/material/Tooltip";
+
 const ContMisVehiculos = () => {
   const MySwal = withReactContent(Swal);
   const history = useHistory();
@@ -121,8 +123,9 @@ const ContMisVehiculos = () => {
 
       f.push(
         <div style={{ display: "flex" }}>
+          <Tooltip title="Modificar">
           <IconButton
-            sx={{ color: "green" }}
+            sx={{ color: "blue" }}
             aria-label="update"
             onClick={() =>
               history.push({
@@ -133,6 +136,8 @@ const ContMisVehiculos = () => {
           >
             <EditIcon />
           </IconButton>
+          </Tooltip>
+          <Tooltip title="Desactivar">
           <IconButton
             sx={{ color: "red" }}
             aria-label="act/desac"
@@ -142,6 +147,7 @@ const ContMisVehiculos = () => {
           >
             <CancelIcon />
           </IconButton>
+          </Tooltip>
         </div>
       );
 
@@ -167,6 +173,7 @@ const ContMisVehiculos = () => {
     <div style={{ textAlign: "center" }}>
       <h1>Mis Vehiculos</h1>
       <div style={{ textAlign: "right", padding: 5 }}>
+      <Tooltip title="Ingresar Vehiculo">
         <IconButton
           sx={{ color: "white", backgroundColor: "green" }}
           aria-label="add"
@@ -174,6 +181,7 @@ const ContMisVehiculos = () => {
         >
           <AddIcon />
         </IconButton>
+        </Tooltip>
       </div>
       <Tabla nomRows={nomRows} rows={rows} />
     </div>

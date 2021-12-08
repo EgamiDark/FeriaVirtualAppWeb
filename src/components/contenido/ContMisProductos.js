@@ -119,6 +119,7 @@ const ContMisProductos = () => {
         case 4:
           f.push(
             <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Tooltip title="Modificar">
               <IconButton
                 sx={{ color: "blue" }}
                 aria-label="update"
@@ -131,6 +132,8 @@ const ContMisProductos = () => {
               >
                 <EditIcon />
               </IconButton>
+              </Tooltip>
+              <Tooltip title="Cancelar">
               <IconButton
                 sx={{ color: "red" }}
                 aria-label="delete"
@@ -140,6 +143,7 @@ const ContMisProductos = () => {
               >
                 <CancelIcon />
               </IconButton>
+              </Tooltip>
             </div>
           );
           break;
@@ -149,12 +153,12 @@ const ContMisProductos = () => {
           f.push(
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Tooltip title="No se puede editar">
-                <IconButton sx={{ color: "blue", opacity: "60%" }}>
+                <IconButton sx={{ color: "fff", opacity: "60%" }}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="No se puede cancelar">
-                <IconButton sx={{ color: "red", opacity: "60%" }}>
+                <IconButton sx={{ color: "fff", opacity: "60%" }}>
                   <CancelIcon />
                 </IconButton>
               </Tooltip>

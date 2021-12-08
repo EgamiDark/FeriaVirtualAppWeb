@@ -140,6 +140,7 @@ const Ofertar = () => {
           name="fechaEntrega"
           className={classes.inputs}
           label="Fecha Entrega(Aprox.)"
+          defaultValue={fechaHoy}
           value={fecha}
           onChange={(item) => {
             fechaActual(item.target.value);

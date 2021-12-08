@@ -93,7 +93,7 @@ const ContMisOfertas = () => {
 
       if (oferta?.rows[i][4] == 1) {
         f.push(
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div >
             <Tooltip title="Modificar">
             <IconButton
               sx={{ color: "blue" }}
@@ -113,7 +113,7 @@ const ContMisOfertas = () => {
               sx={{ color: "red" }}
               aria-label="delete"
               onClick={() => {
-                cancelarOferta(oferta?.rows[i][6]);
+                cancelarOferta(oferta?.rows[i][5]);
               }}
             >
               <CancelIcon />

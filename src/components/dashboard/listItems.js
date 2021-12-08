@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {Dashboard,ShoppingCart,AccountCircle,Logout, AddShoppingCart,AttachMoney,Book,LocalShipping,Sell} from '@mui/icons-material'
+import {Dashboard,ShoppingCart,AccountCircle,Logout, AddShoppingCart,AttachMoney,Book,LocalShipping,Sell, Summarize} from '@mui/icons-material'
 import ListItemButton from '@mui/material/ListItemButton/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText/ListItemText'
@@ -103,6 +103,14 @@ const MainListItems = ()=>{
         <AttachMoney />
       </ListItemIcon>
       <ListItemText primary="Mis Pagos" />
+    </ListItemButton>:<></>}
+
+    { rol===6 ?
+    <ListItemButton onClick={()=>history.push("/reportes")}>
+      <ListItemIcon>
+        <Summarize />
+      </ListItemIcon>
+      <ListItemText primary="Reportes" />
     </ListItemButton>:<></>}
     
     <ListItemButton onClick={()=>history.push("/perfil")}>

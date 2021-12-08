@@ -21,9 +21,19 @@ import DashBoard from "../components/dashboard/Dashboard";
 import OfertasVL from "../components/contenido/ContProductos";
 import MisVL from "../components/contenido/ContMisPedidosVL";
 import MisPagosVentaLocal from "../components/contenido/ContMisPagosVL";
+import ContReporte from "../components/contenido/ContReporte";
+import AddReporte from "../components/crudReporte/añadirReporte"
 
 export const Home = () => {
   return <DashBoard contenido={<ContHome/>}/>
+};
+
+export const Reportes = () => {
+  return <DashBoard contenido={<ContReporte/>}/>
+};
+
+export const AñadirReporte = () => {
+  return <DashBoard contenido={<AddReporte/>}/>
 };
 
 export const MisContratos = () => {
