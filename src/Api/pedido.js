@@ -152,3 +152,16 @@ export const postCancelarPedido = async (idPedido) => {
   return res;
 };
 
+export const postTerminarPedido = async (idPedido) => {
+  let res = await fetch(API + "/api/pedido/terminarPedido/"+idPedido, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((r) => r.json())
+    .then((data) => data)
+    .catch((err) => err);
+  return res;
+};
+

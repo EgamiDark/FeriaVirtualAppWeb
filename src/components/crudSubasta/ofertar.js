@@ -79,8 +79,7 @@ const Ofertar = () => {
   const guardarOferta = async (data) => {
     try {
       data.idSubasta = history.location.state?.idSubasta;
-      data.fechaEntrega = fecha;
-      console.log(JSON.stringify(data));
+      data.fechaEntrega = moment(fechaHoy).format("DD-MM-YYYY");
       const res = await postOfertar(JSON.stringify(data));
 
       if (res.success) {
@@ -132,22 +131,6 @@ const Ofertar = () => {
           helperText={errors.precioOferta ? errors.precioOferta.message : ""}
           className={classes.inputs}
           label="Precio Oferta*"
-          variant="outlined"
-          type="number"
-        ></TextField>
-        <TextField
-          name="cantidadTransporte"
-          {...register("cantidadTransporte", {
-            required: "Este campo es requerido",
-            validate: "Campo no valido",
-          })}
-          requerid
-          error={!!errors.cantidadTransporte}
-          helperText={
-            errors.cantidadTransporte ? errors.cantidadTransporte.message : ""
-          }
-          className={classes.inputs}
-          label="Cantidad a Transportar*"
           variant="outlined"
           type="number"
         ></TextField>

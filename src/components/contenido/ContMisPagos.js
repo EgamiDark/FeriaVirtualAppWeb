@@ -149,15 +149,29 @@ const ContMisPagos = () => {
         
       }
       else {
-        f.push(
-          <div>
-            <Tooltip title="Pagar">
-              <IconButton sx={{ color: "blue" }} onClick={handleOpen}>
-                <MonetizationOnIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        );
+        if(misPagos?.rows[i][5]==1){
+          f.push(
+            <div>
+              <Tooltip title="Pagar">
+                <IconButton sx={{ color: "blue" }} onClick={()=>{handleOpen(misPagos?.rows[i])}}>
+                  <MonetizationOnIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        }
+        else{
+          f.push(
+            <div>
+              <Tooltip title="Pedido Pagado">
+                <IconButton sx={{ color: "fff", opacity:"60%" }} >
+                  <MonetizationOnIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        }
+        
       }
 
       r.push(f);

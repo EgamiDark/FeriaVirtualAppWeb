@@ -66,8 +66,8 @@ const Ofertar = () => {
     try {
       data.idPedido = history.location.state?.idPedido;
       data.kgUnidad = history.location.state?.kgUnidad;
-      data.fechaCosecha = fechaCosecha;
-      data.fechaCaducidad = fechaCaducidad;
+      data.fechaCosecha = moment(fechaCosecha).format("DD-MM-YYYY");
+      data.fechaCaducidad = moment(fechaCaducidad).format("DD-MM-YYYY");
       data.idUsuario = idUsuario;
       const res = await postOfertar(JSON.stringify(data));
 

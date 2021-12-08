@@ -171,6 +171,7 @@ const ContPedidos = () => {
   useEffect(async () => {
     setProductos(await getProductos());
     setPedido(await getPedidosD());
+    console.log(pedido)
     setEstPedido(await getEstPedido());
     setReload(0);
     setReset(1);

@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 // Material UI
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -24,6 +25,7 @@ import {
   getPedidosUsuario,
   postCancelarPedido,
   getOferPByPedido,
+  postTerminarPedido,
 } from "../../Api/pedido";
 import { getEstPedido, getProductos } from "../../Api/datosFk";
 
@@ -51,8 +53,8 @@ const ContMisPedidos = () => {
       <div>
         <Tabla nomRows={nomRowsOfertasP} rows={row} />
       </div>
-    )
-  }
+    );
+  };
   const ofertas = async (idPedido) => {
     let ofer = await getOferPByPedido(idPedido);
     let r = [];
@@ -70,7 +72,6 @@ const ContMisPedidos = () => {
     }
     setTabla(tablaOfertas(r));
     handleOpen();
-
   };
 
   const classes = useStyles();
@@ -86,7 +87,7 @@ const ContMisPedidos = () => {
     boxShadow: 24,
     p: 4,
     borderRadius: 2,
-    textAlign:"center",
+    textAlign: "center",
   };
 
   const MySwal = withReactContent(Swal);
@@ -96,7 +97,8 @@ const ContMisPedidos = () => {
   const history = useHistory();
   const [productos, setProductos] = useState([]);
   const [estadosPedido, setEstadosPedido] = useState([]);
-  let nomRows = ["Id Pedido",
+  let nomRows = [
+    "Id Pedido",
     "Producto",
     "Fecha Solicitud",
     "Fecha Termino",
@@ -164,6 +166,59 @@ const ContMisPedidos = () => {
     });
   };
 
+  const terminarPedido = async (idPedido) => {
+    await MySwal.fire({
+      title: "¿Esta seguro que desea terminar el pedido?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, terminar pedido!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          let ofer = await getOferPByPedido(idPedido);
+          if (ofer.rows?.length) {
+            const res = await postTerminarPedido(JSON.stringify(idPedido));
+
+            if (res.success) {
+              await MySwal.fire(
+                "Terminado!",
+                "El pedido ha terminado correctamente!",
+                "success"
+              );
+              setReset(0);
+              setReload(1);
+            } else {
+              await MySwal.fire({
+                title: <strong>Que Mal!</strong>,
+                html: <i>Ha ocurrido un error intentelo nuevamente!</i>,
+                icon: "error",
+              });
+            }
+          } else {
+            await MySwal.fire({
+              title: <strong>Que Mal!</strong>,
+              html: <i>El pedido aún no tiene ninguna oferta</i>,
+              icon: "warning",
+            });
+          }
+        } catch (error) {
+          await MySwal.fire({
+            title: <strong>Que Mal!</strong>,
+            html: (
+              <i>
+                La base de datos se encuentra en mantenimiento, intente mas
+                tarde!
+              </i>
+            ),
+            icon: "warning",
+          });
+        }
+      }
+    });
+  };
+
   const iteRows = async () => {
     let r = [];
 
@@ -199,45 +254,58 @@ const ContMisPedidos = () => {
         case 1:
           f.push(
             <div>
-              {cantOfer ?
+              {cantOfer ? (
                 <Tooltip title="No modificable">
+                  <IconButton sx={{ color: "fff", opacity: "60%" }}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Modificar">
                   <IconButton
-                    sx={{ color: "fff", opacity: "60%" }}
+                    sx={{ color: "green" }}
+                    aria-label="update"
+                    onClick={() =>
+                      history.push({
+                        pathname: "/modificarPedido",
+                        state: { idPedido: misPedidos?.rows[i][0] },
+                      })
+                    }
                   >
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                : <Tooltip title="Modificar">
-              <IconButton
-                sx={{ color: "green" }}
-                aria-label="update"
-                onClick={() =>
-                  history.push({
-                    pathname: "/modificarPedido",
-                    state: { idPedido: misPedidos?.rows[i][0] },
-                  })
-                }
-              >
-                <EditIcon />
-              </IconButton>
-              </Tooltip>}
+              )}
               <Tooltip title="Ofertas">
-              <IconButton
-                sx={{ color: "blue" }}
-                onClick={() => { ofertas(misPedidos?.rows[i][0]) }}>
-                <FormatListBulletedIcon />
-              </IconButton>
+                <IconButton
+                  sx={{ color: "blue" }}
+                  onClick={() => {
+                    ofertas(misPedidos?.rows[i][0]);
+                  }}
+                >
+                  <FormatListBulletedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Terminar Ahora">
+                <IconButton
+                  sx={{ color: "green" }}
+                  onClick={() => {
+                    terminarPedido(misPedidos?.rows[i][0]);
+                  }}
+                >
+                  <CheckCircleOutlineIcon />
+                </IconButton>
               </Tooltip>
               <Tooltip title="Cancelar">
-              <IconButton
-                sx={{ color: "red" }}
-                aria-label="act/desac"
-                onClick={() => {
-                  cancelarPedido(misPedidos?.rows[i][0]);
-                }}
-              >
-                <CancelIcon />
-              </IconButton>
+                <IconButton
+                  sx={{ color: "red" }}
+                  aria-label="act/desac"
+                  onClick={() => {
+                    cancelarPedido(misPedidos?.rows[i][0]);
+                  }}
+                >
+                  <CancelIcon />
+                </IconButton>
               </Tooltip>
             </div>
           );
@@ -249,23 +317,22 @@ const ContMisPedidos = () => {
           f.push(
             <div>
               <Tooltip title="No modificable">
-                <IconButton
-                  sx={{ color: "fff", opacity: "60%" }}
-                >
+                <IconButton sx={{ color: "fff", opacity: "60%" }}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Ofertas">
                 <IconButton
                   sx={{ color: "blue" }}
-                  onClick={() => { ofertas(misPedidos?.rows[i][0]) }}>
+                  onClick={() => {
+                    ofertas(misPedidos?.rows[i][0]);
+                  }}
+                >
                   <FormatListBulletedIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="No cancelable">
-                <IconButton
-                  sx={{ color: "fff", opacity: "60%" }}
-                >
+                <IconButton sx={{ color: "fff", opacity: "60%" }}>
                   <CancelIcon />
                 </IconButton>
               </Tooltip>
@@ -273,9 +340,7 @@ const ContMisPedidos = () => {
           );
           break;
         default:
-          f.push(
-            <p style={{ color: "red", fontWeight: "bold" }}>ERROR</p>
-          );
+          f.push(<p style={{ color: "red", fontWeight: "bold" }}>ERROR</p>);
           break;
       }
 
@@ -316,7 +381,7 @@ const ContMisPedidos = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleModal}>
-        <h1>Ofertas</h1>
+          <h1>Ofertas</h1>
           {tabla}
         </Box>
       </Modal>
