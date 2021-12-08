@@ -56,7 +56,7 @@ const Ofertar = () => {
       setFecha(moment(oferta?.rows[i][1]).format("YYYY-MM-DD"));
       setPrecio(oferta?.rows[i][2]);
       setPatente(oferta?.rows[i][3]);
-      setIdOferta(oferta?.rows[i][6]);
+      setIdOferta(oferta?.rows[i][5]);
     }
   };
 
@@ -145,26 +145,6 @@ const Ofertar = () => {
           value={precio}
           onChange={(item) => {
             setPrecio(item.target.value);
-          }}
-        ></TextField>
-        <TextField
-          name="cantidadTransporte"
-          {...register("cantidadTransporte", {
-            required: "Este campo es requerido",
-            validate: "Campo no valido",
-          })}
-          requerid
-          error={!!errors.cantidadTransporte}
-          helperText={
-            errors.cantidadTransporte ? errors.cantidadTransporte.message : ""
-          }
-          className={classes.inputs}
-          label="Cantidad a Transportar*"
-          variant="outlined"
-          type="number"
-          value={cantidad}
-          onChange={(item) => {
-            setCantidad(item.target.value);
           }}
         ></TextField>
         <TextField
