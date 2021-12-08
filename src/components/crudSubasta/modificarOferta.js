@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -8,11 +8,10 @@ import withReactContent from "sweetalert2-react-content";
 import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import moment from "moment";
-import useAuth from '../../auth/useAuth';
+import useAuth from "../../auth/useAuth";
 
 import { getOferta, postModificarOferta } from "../../Api/subasta";
 import { getTransportesUsuario } from "../../Api/transporte";
-
 
 const useStyles = makeStyles(() => ({
   inputs: {
@@ -37,48 +36,50 @@ const Ofertar = () => {
   } = useForm();
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  const [vehiculo, setVehiculo] = useState([])
-  const [selectV, setSelectV] = useState([])
-  const [oferta, setOferta] = useState([])
-  const [idSubasta, setIdSubasta] = useState(0)
-  const [fecha, setFecha] = useState("")
-  const [precio, setPrecio] = useState(0)
-  const [cantidad, setCantidad] = useState(0)
-  const [patente, setPatente] = useState("")
-  const [idOferta, setIdOferta] = useState(0)
-  const [reset, setReset] = useState(0)
+
+  const [vehiculo, setVehiculo] = useState([]);
+  const [selectV, setSelectV] = useState([]);
+  const [oferta, setOferta] = useState([]);
+  const [idSubasta, setIdSubasta] = useState(0);
+  const [fecha, setFecha] = useState("");
+  const [precio, setPrecio] = useState(0);
+  const [cantidad, setCantidad] = useState(0);
+  const [patente, setPatente] = useState("");
+  const [idOferta, setIdOferta] = useState(0);
+  const [reset, setReset] = useState(0);
 
   const classes = useStyles();
 
   const iteRows = () => {
     for (let i = 0; i < oferta.rows?.length; i++) {
-      setIdSubasta(oferta?.rows[i][0])
-      setFecha(moment(oferta?.rows[i][1]).format("YYYY-MM-DD"))
-      setPrecio(oferta?.rows[i][2])
-      setCantidad(oferta?.rows[i][3])
-      setPatente(oferta?.rows[i][4])
-      setIdOferta(oferta?.rows[i][6])
+      setIdSubasta(oferta?.rows[i][0]);
+      setFecha(moment(oferta?.rows[i][1]).format("YYYY-MM-DD"));
+      setPrecio(oferta?.rows[i][2]);
+      setPatente(oferta?.rows[i][3]);
+      setIdOferta(oferta?.rows[i][6]);
     }
-  }
+  };
 
   const cargarVehiculo = () => {
-    let f = []
+    let f = [];
     for (let i = 0; i < vehiculo.rows?.length; i++) {
-      f.push(<MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>)
+      f.push(
+        <MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>
+      );
     }
-    setSelectV(f)
-  }
+    setSelectV(f);
+  };
 
   useEffect(async () => {
-    setVehiculo(await getTransportesUsuario(idUsuario))
-    setOferta(await getOferta(history.location.state?.idOferta))
-    setReset(1)
-  }, [])
+    setVehiculo(await getTransportesUsuario(idUsuario));
+    setOferta(await getOferta(history.location.state?.idOferta));
+    setReset(1);
+  }, []);
 
   useEffect(() => {
-    cargarVehiculo()
-    iteRows()
-  }, [reset])
+    cargarVehiculo();
+    iteRows();
+  }, [reset]);
 
   const modificarOferta = async (data) => {
     try {
@@ -93,11 +94,7 @@ const Ofertar = () => {
       if (res.success) {
         await MySwal.fire({
           title: <strong>Exito!</strong>,
-          html: (
-            <i>
-              Modificado Correctamente!
-            </i>
-          ),
+          html: <i>Modificado Correctamente!</i>,
           icon: "success",
         });
         history.push("/misOfertas");
@@ -146,8 +143,8 @@ const Ofertar = () => {
           variant="outlined"
           type="number"
           value={precio}
-          onChange={item=>{
-            setPrecio(item.target.value)
+          onChange={(item) => {
+            setPrecio(item.target.value);
           }}
         ></TextField>
         <TextField
@@ -158,14 +155,16 @@ const Ofertar = () => {
           })}
           requerid
           error={!!errors.cantidadTransporte}
-          helperText={errors.cantidadTransporte ? errors.cantidadTransporte.message : ""}
+          helperText={
+            errors.cantidadTransporte ? errors.cantidadTransporte.message : ""
+          }
           className={classes.inputs}
           label="Cantidad a Transportar*"
           variant="outlined"
           type="number"
           value={cantidad}
-          onChange={item=>{
-            setCantidad(item.target.value)
+          onChange={(item) => {
+            setCantidad(item.target.value);
           }}
         ></TextField>
         <TextField
@@ -174,11 +173,10 @@ const Ofertar = () => {
           label="Fecha Entrega(Aprox.)"
           value={fecha}
           onChange={(item) => {
-            setFecha(moment(item.target.value).format("YYYY-MM-DD"))
+            setFecha(moment(item.target.value).format("YYYY-MM-DD"));
           }}
           variant="outlined"
           type="date"
-          
         ></TextField>
         <TextField
           name="patente"
@@ -187,8 +185,8 @@ const Ofertar = () => {
           label="Vehiculo*"
           variant="outlined"
           value={patente}
-          onChange={item=>{
-            setPatente(item.target.value)
+          onChange={(item) => {
+            setPatente(item.target.value);
           }}
         >
           {selectV}

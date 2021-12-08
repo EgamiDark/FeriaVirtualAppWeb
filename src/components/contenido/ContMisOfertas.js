@@ -101,7 +101,7 @@ const ContMisOfertas = () => {
               onClick={() =>
                 history.push({
                   pathname: "/modificarOfertaS",
-                  state: { idOferta: oferta?.rows[i][6] },
+                  state: { idOferta: oferta?.rows[i][0] },
                 })
               }
             >

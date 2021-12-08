@@ -79,7 +79,8 @@ const Ofertar = () => {
   const guardarOferta = async (data) => {
     try {
       data.idSubasta = history.location.state?.idSubasta;
-      data.fechaEntrega = fecha;
+      data.fechaEntrega = moment(fecha).format("YYYY-MM-DD");
+      console.log(data.fechaEntrega)
       console.log(JSON.stringify(data));
       const res = await postOfertar(JSON.stringify(data));
 
