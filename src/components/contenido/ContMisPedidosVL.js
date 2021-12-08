@@ -114,7 +114,7 @@ const ContProductos = () => {
 
       // Estado de venta
       for (let e = 0; e < estadosVenta.rows?.length; e++) {
-        if (misVentasLocales?.rows[i][2] == estadosVenta?.rows[e][0]) {
+        if (misVentasLocales?.rows[i][4] == estadosVenta?.rows[e][0]) {
           if (estadosVenta?.rows[e][0] == 1) {
             f.push(<strong style={{ color: "blue" }}>EN PROCESO</strong>);
           }
@@ -133,7 +133,7 @@ const ContProductos = () => {
         <div>
           <IconButton
             sx={{ color: "red" }}
-            aria-label="update"
+            aria-label="cancelar"
             onClick={() => {
               cancelarPedido(misVentasLocales?.rows[i]);
             }}
