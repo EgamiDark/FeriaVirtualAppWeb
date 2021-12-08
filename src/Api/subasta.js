@@ -21,6 +21,7 @@ export const getOfertas = async (id) => {
 };
 
 export const getOferta = async (id) => {
+  console.log("Id oferta: "+id)
   let res = await fetch(API +"/api/subasta/oferta/"+id, {
     method: 'GET'
   })

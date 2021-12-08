@@ -57,7 +57,7 @@ const MainListItems = ()=>{
       <ListItemIcon>
         <Sell />
       </ListItemIcon>
-      <ListItemText primary="Mis Productos" />
+      <ListItemText primary="Mis Ofertas" />
     </ListItemButton>:<></>}
     { rol===3 ?
     <ListItemButton onClick={()=>history.push("/misContratos")}>

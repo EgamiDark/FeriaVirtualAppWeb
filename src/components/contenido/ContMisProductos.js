@@ -183,7 +183,7 @@ const ContMisProductos = () => {
   }, [reset]);
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Mis Ofertas(Productos)</h1>
+      <h1>Mis Ofertas</h1>
       <Tabla nomRows={nomRows} rows={rows} />
     </div>
   );
