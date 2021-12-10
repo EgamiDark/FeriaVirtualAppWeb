@@ -101,7 +101,10 @@ const ContMisPagosVL = () => {
   let idUsuario = auth?.user[0];
 
   let nomRows = [
-    "Id Pedido",
+    "Id Pago",
+    "Id Venta",
+    "Monto Productos",
+    "Monto Transporte",
     "Monto Total",
     "Fecha de Pago",
     "Estado",
@@ -113,10 +116,12 @@ const ContMisPagosVL = () => {
 
     for (let i = 0; i < misPagos.rows?.length; i++) {
       let f = [];
-
+      console.log(misPagos?.rows[i])
       // Id
       f.push(misPagos?.rows[i][0]);
-
+      f.push(misPagos?.rows[i][7]);
+      f.push(misPagos?.rows[i][1]);
+      f.push(misPagos?.rows[i][2]);
       // Monto Total
       f.push(misPagos?.rows[i][3]);
 
