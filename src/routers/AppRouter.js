@@ -25,7 +25,8 @@ import {
   MisVentasLocales,
   MisPagosVL,
   Reportes,
-  AñadirReporte
+  AñadirReporte,
+  Prueba
 } from "../templates/Pages";
 import useAuth from '../auth/useAuth'
 import { useState } from "react";
@@ -48,6 +49,7 @@ const AppRouter = () => {
         <Route exact path="/login" component={SignIn} />
         <PrivateRoute exact path="/home" component={Home} />
         <PrivateRoute exact path="/reportes" component={Reportes} />
+        <PrivateRoute exact path="/prueba" component={Prueba} />
         <PrivateRoute exact path="/añadirReporte" component={AñadirReporte} />
         <PrivateRoute exact path="/subastas" component={Subastas} />
         <PrivateRoute exact path="/ofertarSubasta" component={OfertarSubasta} />

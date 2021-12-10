@@ -9,7 +9,7 @@ const ContInforme = () => {
   let nomRows = ["Id Reporte","Fecha Ingreso", "Fecha Desde", "Fecha Hasta", "Rol"];
   let rows = [];
 
-  return (
+  return (  
     <div style={{ textAlign: "center" }}>
       <h1>Reportes</h1>
       <div style={{ textAlign: "right", padding: 5 }}>
@@ -17,7 +17,7 @@ const ContInforme = () => {
           <IconButton
             sx={{ color: "white", backgroundColor: "green" }}
             aria-label="add"
-            onClick={() => history.push("/añadirReporte")}
+            onClick={() => history.push("/prueba ")}
           >
             <AddIcon />
           </IconButton>
