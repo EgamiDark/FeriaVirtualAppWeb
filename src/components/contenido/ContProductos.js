@@ -49,6 +49,7 @@ const ContProductos = () => {
     data.montoTotal = montoTotal;
     data.idOfertaProd = idOfertaProd;
     data.idUsuario = idUsuario;
+    data.cantidad = cantidad;
 
     await MySwal.fire({
       title: "Proceso de Compra",
@@ -62,10 +63,12 @@ const ContProductos = () => {
       if (result.isConfirmed) {
         try {
           const res = await comprarVL(JSON.stringify(data));
-          const resCambiaEst = await cambiaEstOfertaVL(JSON.stringify(data));
-          console.log(resCambiaEst);
+          let resCambiaEst;
+          if(res.success){
+            resCambiaEst = await cambiaEstOfertaVL(JSON.stringify(data));
+          }
 
-          if (res.success && resCambiaEst) {
+          if (resCambiaEst) {
             await MySwal.fire(
               "Compra!",
               "Proceso realizado con exito!",

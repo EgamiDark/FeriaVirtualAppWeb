@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 // Material UI
+import Tooltip from "@mui/material/Tooltip";
 import Tabla from "../Tabla";
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -23,7 +24,7 @@ import { getPedidos } from "../../Api/pedido";
 const ContProductos = () => {
   let auth = useAuth();
   let idUsuario = auth?.user[0];
-  let nomRows = ["Producto", "Monto Total", "Estado", "Acciones"];
+  let nomRows = ["Id compra","Producto","Cantidad" ,"Monto Total", "Estado", "Acción"];
 
   const MySwal = withReactContent(Swal);
 
@@ -87,6 +88,7 @@ const ContProductos = () => {
     for (let i = 0; i < misVentasLocales.rows?.length; i++) {
       let f = [];
 
+      f.push(misVentasLocales?.rows[i][0]);
       // venta local
       for (let op = 0; op < ofertasProductos.rows?.length; op++) {
         // obtiene ofertas productos relacionadas con la venta local
@@ -109,39 +111,59 @@ const ContProductos = () => {
         }
       }
 
+      //Cantidad
+      f.push(misVentasLocales?.rows[i][5]);
+
       // Monto Total
       f.push(misVentasLocales?.rows[i][1]);
 
       // Estado de venta
       for (let e = 0; e < estadosVenta.rows?.length; e++) {
         if (misVentasLocales?.rows[i][4] == estadosVenta?.rows[e][0]) {
-          if (estadosVenta?.rows[e][0] == 1) {
-            f.push(<strong style={{ color: "blue" }}>EN PROCESO</strong>);
-          }
-
-          if (estadosVenta?.rows[e][0] == 2) {
-            f.push(<strong style={{ color: "green" }}>TERMINADA</strong>);
-          }
-
-          if (estadosVenta?.rows[e][0] == 3) {
-            f.push(<strong style={{ color: "red" }}>CANCELADA</strong>);
-          }
+          f.push(estadosVenta?.rows[e][1]);
         }
       }
-
-      f.push(
-        <div>
-          <IconButton
-            sx={{ color: "red" }}
-            aria-label="cancelar"
-            onClick={() => {
-              cancelarPedido(misVentasLocales?.rows[i]);
-            }}
-          >
-            <CancelIcon />
-          </IconButton>
-        </div>
-      );
+      switch (misVentasLocales?.rows[i][4]) {
+        case 1:
+          f.push(
+            <div>
+              <Tooltip title="Cancelar">
+              <IconButton
+                sx={{ color: "red" }}
+                aria-label="cancelar"
+                onClick={() => {
+                  cancelarPedido(misVentasLocales?.rows[i]);
+                }}
+              >
+                <CancelIcon />
+              </IconButton>
+              </Tooltip>
+            </div>
+          );
+          break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          f.push(
+            <div>
+              <Tooltip title="No Cancelable">
+              <IconButton
+                sx={{ color: "fff", opacity: "60%"  }}
+                aria-label="cancelar"
+                onClick={() => {
+                  
+                }}
+              >
+                <CancelIcon />
+              </IconButton>
+              </Tooltip>
+            </div>
+          );
+          break;
+        default:
+          break;
+      }
       r.push(f);
     }
     setRows(r);

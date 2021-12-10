@@ -20,6 +20,16 @@ export const getOfertas = async (id) => {
   return await res;
 };
 
+export const getOfertasByIdSubasta = async (id) => {
+  let res = await fetch(API +"/api/subasta/ofertas/subasta/"+id, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(data => data)
+    .catch(err => err);
+  return await res;
+};
+
 export const getOferta = async (id) => {
   console.log("Id oferta: "+id)
   let res = await fetch(API +"/api/subasta/oferta/"+id, {

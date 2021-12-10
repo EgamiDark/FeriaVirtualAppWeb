@@ -124,7 +124,7 @@ const ContMisPagos = () => {
       f.push(misPagos?.rows[i][0]);
       f.push(misPagos?.rows[i][6]);
       let fechaPago = moment(misPagos?.rows[i][4]).format(
-        "DD/MM/YYYY hh:mm:ss"
+        "DD/MM/YYYY"
       );
       f.push(fechaPago);
       f.push(misPagos?.rows[i][9]);
