@@ -59,9 +59,13 @@ const Ofertar = () => {
   const cargarVehiculo = () => {
     let f = [];
     for (let i = 0; i < vehiculo.rows?.length; i++) {
-      f.push(
-        <MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>
-      );
+      console.log(vehiculo?.rows[i])
+      if (vehiculo?.rows[i][3] == "1") {
+        f.push(
+          <MenuItem value={vehiculo?.rows[i][0]}>{vehiculo?.rows[i][0]}</MenuItem>
+        );
+      }
+      
     }
     setSelectV(f);
   };
