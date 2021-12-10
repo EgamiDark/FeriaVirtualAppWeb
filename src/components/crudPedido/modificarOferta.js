@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import useAuth from '../../auth/useAuth';
 
-import { getOfertaProd, postModificarOferta } from "../../Api/pedido";
+import { getOfertaProd, postModificarOferta,getPedidoById } from "../../Api/pedido";
 
 
 const useStyles = makeStyles(() => ({
@@ -35,7 +35,13 @@ const Ofertar = () => {
     formState: { errors },
   } = useForm();
   let auth = useAuth();
+  let hoy = new Date();
+  let fechMinCadu = new Date();
+  fechMinCadu.setDate(hoy.getDate() + 30);
+  let defaultMinCadu = moment(fechMinCadu.toISOString()).format("YYYY-MM-DD");
+  let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
   let idUsuario = auth?.user[0];
+  let pedido = history.location.state?.pedido;
   const [oferta, setOferta] = useState([])
   const [idOferta, setIdOferta] = useState(0)
   const [precioUnidad, setPrecioUnidad] = useState(0)
@@ -48,7 +54,7 @@ const Ofertar = () => {
 
   const classes = useStyles();
 
-  const iteRows = () => {
+  const iteRows = async() => {
     for (let i = 0; i < oferta.rows?.length; i++) {
       setIdOferta(oferta?.rows[i][0])
       setPrecioUnidad(oferta?.rows[i][1])
@@ -58,16 +64,30 @@ const Ofertar = () => {
       setFechaCaducidad(moment(oferta?.rows[i][5]).format("YYYY-MM-DD"))
       setIdPedido(oferta?.rows[i][6])
     }
+    
   }
 
   useEffect(async () => {
     setOferta(await getOfertaProd(history.location.state?.idOferta))
+    
     setReset(1)
   }, [])
 
   useEffect(() => {
     iteRows()
   }, [reset])
+
+  const fechaMinCaducidad = (fechaCaduci) => {
+
+
+    if (fechaCaduci < defaultMinCadu) {
+      
+      setFechaCaducidad(moment(defaultMinCadu).format("YYYY-MM-DD"));
+    } else {
+     
+      setFechaCaducidad(moment(fechaCaduci).format("YYYY-MM-DD"));
+    }
+  };
 
   const modificarOferta = async (data) => {
     try {
@@ -123,15 +143,30 @@ const Ofertar = () => {
           disabled
         ></TextField>
         <TextField
+          name="kgUnidad"
+          className={classes.inputs}
+          label="KG X Unidad"
+          variant="outlined"
+          value={kgUnidad}
+          disabled
+        ></TextField>
+        <TextField
           name="precioUnidad"
           {...register("precioUnidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
+            max: {
+              value: pedido[5],
+              message:
+                "El precio debe ser menor o igual a" +
+                " " +
+                pedido[5],
+            },
           })}
           error={!!errors.precioUnidad}
           helperText={errors.precioUnidad ? errors.precioUnidad.message : ""}
           className={classes.inputs}
-          label="Precio Unidad*"
+          label={"Precio Unidad*"+ "(Maximo " + pedido[5] + ")" }
           variant="outlined"
           type="number"
           value={precioUnidad}
@@ -140,33 +175,23 @@ const Ofertar = () => {
           }}
         ></TextField>
         <TextField
-          name="kgUnidad"
-          {...register("kgUnidad", {
-            required: "Este campo es requerido",
-            validate: "Campo no valido",
-          })}
-          error={!!errors.kgUnidad}
-          helperText={errors.kgUnidad ? errors.kgUnidad.message : ""}
-          className={classes.inputs}
-          label="KG X Unidad*"
-          variant="outlined"
-          type="number"
-          value={kgUnidad}
-          onChange={item=>{
-            setKgUnidad(item.target.value)
-          }}
-        ></TextField>
-        <TextField
           name="cantidad"
           {...register("cantidad", {
             required: "Este campo es requerido",
             validate: "Campo no valido",
+            max: {
+              value: pedido[3],
+              message:
+                "El precio debe ser menor o igual a" +
+                " " +
+                pedido[3],
+            },
           })}
           requerid
           error={!!errors.cantidad}
           helperText={errors.cantidad ? errors.cantidad.message : ""}
           className={classes.inputs}
-          label="Cantidad a Ofertar*"
+          label={"Cantidad a Ofertar*"+ "(Maximo " + pedido[3] + ")" }
           variant="outlined"
           type="number"
           value={cantidad}
@@ -180,7 +205,7 @@ const Ofertar = () => {
           label="Fecha Cosecha"
           value={fechaCosecha}
           onChange={(item) => {
-            setFechaCosecha(moment(item.target.value).format("YYYY-MM-DD"))
+            setFechaCosecha(item.target.value)
           }}
           variant="outlined"
           type="date"
@@ -191,7 +216,7 @@ const Ofertar = () => {
           label="Fecha Caducidad"
           value={fechaCaducidad}
           onChange={(item) => {
-            setFechaCaducidad(moment(item.target.value).format("YYYY-MM-DD"))
+            fechaMinCaducidad(item.target.value)
           }}
           variant="outlined"
           type="date"

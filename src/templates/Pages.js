@@ -23,7 +23,6 @@ import MisVL from "../components/contenido/ContMisPedidosVL";
 import MisPagosVentaLocal from "../components/contenido/ContMisPagosVL";
 import ContReporte from "../components/contenido/ContReporte";
 import AddReporte from "../components/crudReporte/añadirReporte"
-import Test from "../components/crudReporte/prueba"
 
 export const Home = () => {
   return <DashBoard contenido={<ContHome/>}/>
@@ -35,10 +34,6 @@ export const Reportes = () => {
 
 export const AñadirReporte = () => {
   return <DashBoard contenido={<AddReporte/>}/>
-};
-
-export const Prueba = () => {
-  return <DashBoard contenido={<Test/>}/>
 };
 
 export const MisContratos = () => {

@@ -43,7 +43,7 @@ const ContProductos = () => {
   const [reset, setReset] = useState(0);
 
   const comprar = async (idOfertaProd, precio, cantidad, kgUnidad) => {
-    const montoTotal = precio * cantidad * kgUnidad;
+    const montoTotal = precio * cantidad;
 
     let data = {};
     data.montoTotal = montoTotal;
@@ -115,7 +115,7 @@ const ContProductos = () => {
           break;
         }
       }
-      f.push(misOfertasVL?.rows[i][1]);
+      f.push("$"+misOfertasVL?.rows[i][1]);
       f.push(misOfertasVL?.rows[i][2]);
       f.push(misOfertasVL?.rows[i][3]);
       f.push(moment(misOfertasVL?.rows[i][4]).format("DD/MM/YYYY"));

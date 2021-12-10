@@ -5,6 +5,12 @@ import { makeStyles } from "@mui/styles";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { getRol } from "../../Api";
+import { useForm } from "react-hook-form";
+import useAuth from "../../auth/useAuth";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useHistory } from "react-router-dom";
+import { postIngresarReporte } from "../../Api/reporte";
 
 const useStyles = makeStyles(() => ({
   img: {
@@ -21,16 +27,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AñadirInforme = () => {
+const AñadirReporte = () => {
+  const MySwal = withReactContent(Swal);
+  const history = useHistory();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const classes = useStyles();
   let mesAtras = new Date();
   mesAtras.setDate(mesAtras.getDate() - 30);
   let fechaMesAtras = moment(mesAtras.toISOString()).format("YYYY-MM-DD");
   let hoy = new Date();
   let fechaHoy = moment(hoy.toISOString()).format("YYYY-MM-DD");
+  const [fechaDesde, setFechaDesde] = useState(fechaMesAtras);
+  const [fechaHasta, setFechaHasta] = useState(fechaHoy);
   const [rol, setRol] = useState([]);
   const [selectR, setSelectR] = useState([]);
   const [reset, setReset] = useState(0);
+  let auth = useAuth();
+  let idUsuario = auth?.user[0];
 
   const cargarRol = () => {
     let f = [];
@@ -52,12 +69,50 @@ const AñadirInforme = () => {
     cargarRol();
   }, [reset]);
 
+  const guardarReporte = async (data) => {
+    try {
+      let f = new Date();
+      data.fechaIngreso = moment(f.toISOString()).format("DD-MM-YYYY");
+      data.fechaDesde = moment(fechaDesde).format("DD-MM-YYYY");
+      data.fechaHasta = moment(fechaHasta).format("DD-MM-YYYY");
+      data.idUsuario = idUsuario;
+      const res = await postIngresarReporte(JSON.stringify(data));
+      if (res.success) {
+        await MySwal.fire({
+          title: <strong>Exito!</strong>,
+          html: <i>Guardado Correctamente!</i>,
+          icon: "success",
+        });
+        history.push("/reportes");
+      } else {
+        await MySwal.fire({
+          title: <strong>Que Mal!</strong>,
+          html: <i>Los datos ingresados son incorrectos!</i>,
+          icon: "error",
+        });
+      }
+    } catch (error) {
+      await MySwal.fire({
+        title: <strong>Que Mal!</strong>,
+        html: (
+          <i>
+            La base de datos se encuentra en mantenimiento, intente mas tarde!
+          </i>
+        ),
+        icon: "warning",
+      });
+    }
+  };
+
   return (
     <div style={{ textAlign: "center", width: "100%" }}>
       <h1>Generar Reporte</h1>
-      <form onSubmit={() => {}}>
+      <form onSubmit={handleSubmit(guardarReporte)}>
         <TextField
-          name="rol"
+          name="idRol"
+          {...register("idRol", { required: "Este campo es requerido" })}
+          error={!!errors.idRol}
+          helperText={errors.idRol ? errors.idRol.message : ""}
           className={classes.selects}
           select
           label="Rol"
@@ -70,11 +125,11 @@ const AñadirInforme = () => {
             style={{ width: "60%", display: "flex", justifyContent: "right" }}
           >
             <TextField
-              name="desde"
+              name="fechaDesde"
               className={classes.inputs}
               label="Fecha desde"
-              defaultValue={fechaMesAtras}
-              onChange={(item) => {}}
+              defaultValue={fechaDesde}
+              onChange={(item) => {setFechaDesde(item.target.value)}}
               variant="outlined"
               type="date"
             ></TextField>
@@ -83,27 +138,35 @@ const AñadirInforme = () => {
             style={{ width: "60%", display: "flex", justifyContent: "left" }}
           >
             <TextField
-              name="hasta"
+              name="fechaHasta"
               className={classes.inputs}
               label="Fecha hasta"
-              defaultValue={fechaHoy}
-              onChange={(item) => {}}
+              defaultValue={fechaHasta}
+              onChange={(item) => {setFechaHasta(item.target.value)}}
               variant="outlined"
               type="date"
             ></TextField>
           </div>
         </div>
+        <TextField
+          name="titulo"
+          className={classes.inputs}
+          label="Nota(Opcional)"
+          onChange={(item) => {}}
+          variant="outlined"
+          type="text"
+        ></TextField>
         <Button
           className={classes.selects}
           type="submit"
           variant="contained"
           color="primary"
         >
-          Enviar Informes
+          Enviar Reportes
         </Button>
       </form>
     </div>
   );
 };
 
-export default AñadirInforme;
+export default AñadirReporte;

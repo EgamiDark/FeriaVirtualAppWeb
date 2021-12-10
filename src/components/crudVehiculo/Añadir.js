@@ -144,7 +144,7 @@ const Añadir = () => {
             validate: "validation",
           })}
           className={classes.inputs}
-          label="Capacidad carga"
+          label="Capacidad carga(kg)"
           variant="standard"
         ></TextField>
         <TextField

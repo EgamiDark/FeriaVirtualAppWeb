@@ -24,6 +24,7 @@ const ContMisProductos = () => {
   let auth = useAuth();
   let idUsuario = auth?.user[0];
   let nomRows = [
+    "Id Oferta",
     "Id Pedido",
     "Producto",
     "Precio Unidad",
@@ -90,9 +91,12 @@ const ContMisProductos = () => {
     let r = [];
     for (let i = 0; i < misProductos.rows?.length; i++) {
       let f = [];
+      f.push(misProductos?.rows[i][0]);
       f.push(misProductos?.rows[i][6]);
+      let ped =[]
       for (let p = 0; p < pedido.rows?.length; p++) {
         if (pedido?.rows[p][0] == misProductos?.rows[i][6]) {
+          ped = pedido?.rows[p];
           for (let pr = 0; pr < producto.rows?.length; pr++) {
             if (pedido?.rows[p][8] == producto?.rows[pr][0]) {
               f.push(producto?.rows[pr][1]);
@@ -102,7 +106,7 @@ const ContMisProductos = () => {
           break;
         }
       }
-      f.push(misProductos?.rows[i][1]);
+      f.push("$"+misProductos?.rows[i][1]);
       f.push(misProductos?.rows[i][2]);
       f.push(misProductos?.rows[i][3]);
       f.push(moment(misProductos?.rows[i][4]).format("DD/MM/YYYY"));
@@ -126,7 +130,7 @@ const ContMisProductos = () => {
                 onClick={() =>
                   history.push({
                     pathname: "/modificarOfertaP",
-                    state: { idOferta: misProductos?.rows[i][0] },
+                    state: { idOferta: misProductos?.rows[i][0],pedido:ped },
                   })
                 }
               >

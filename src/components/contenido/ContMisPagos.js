@@ -128,9 +128,9 @@ const ContMisPagos = () => {
       );
       f.push(fechaPago);
       f.push(misPagos?.rows[i][9]);
-      f.push(misPagos?.rows[i][1]);
-      f.push(misPagos?.rows[i][2]);
-      f.push(misPagos?.rows[i][3]);
+      f.push("$"+misPagos?.rows[i][1]);
+      f.push("$"+misPagos?.rows[i][2]);
+      f.push("$"+misPagos?.rows[i][3]);
       for (let e = 0; e < estadosPago.rows?.length; e++) {
         if (misPagos?.rows[i][5] == estadosPago?.rows[e][0]) {
           f.push(estadosPago?.rows[e][1]);

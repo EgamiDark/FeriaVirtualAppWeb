@@ -82,7 +82,7 @@ const ContMisOfertas = () => {
       let f = [];
       f.push(oferta?.rows[i][0]);
       f.push(moment(oferta?.rows[i][1]).format("DD/MM/YYYY"));
-      f.push(oferta?.rows[i][2]);
+      f.push("$"+oferta?.rows[i][2]);
       f.push(oferta?.rows[i][3]);
       for (let e = 0; e < estOferta.rows?.length; e++) {
         if (estOferta.rows[e][0] == oferta?.rows[i][4]) {
@@ -125,12 +125,12 @@ const ContMisOfertas = () => {
         f.push(
           <div>
             <Tooltip title="No se puede editar">
-              <IconButton sx={{ color: "blue", opacity: "60%" }}>
+              <IconButton sx={{ color: "fff", opacity: "60%" }}>
                 <EditIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title="No se puede cancelar">
-              <IconButton sx={{ color: "red", opacity: "60%" }}>
+              <IconButton sx={{ color: "fff", opacity: "60%" }}>
                 <CancelIcon />
               </IconButton>
             </Tooltip>

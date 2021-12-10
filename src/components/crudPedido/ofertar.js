@@ -47,13 +47,13 @@ const Ofertar = () => {
   const classes = useStyles();
 
   const fechaMinCaducidad = (fechaCaduci) => {
-    console.log("hola desde la funcion fechaMinCaducidad")
+
 
     if (fechaCaduci < defaultMinCadu) {
-      console.log("hola desde el if")
+     
       setFechaCaducidad(moment(defaultMinCadu).format("YYYY-MM-DD"));
     } else {
-      console.log("hola desde el else")
+   
       setFechaCaducidad(moment(fechaCaduci).format("YYYY-MM-DD"));
     }
   };
